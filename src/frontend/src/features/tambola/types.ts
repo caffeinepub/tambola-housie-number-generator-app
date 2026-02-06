@@ -15,3 +15,5 @@ export interface PersistedState {
   gameState: TambolaGameState;
   autoDrawSettings: AutoDrawSettings;
 }
+
+export type GameAction = 'draw' | 'undo' | 'reset' | 'new-game' | 'idle';

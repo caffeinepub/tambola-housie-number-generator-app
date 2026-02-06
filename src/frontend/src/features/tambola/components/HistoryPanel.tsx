@@ -22,7 +22,11 @@ export function HistoryPanel({ calledNumbers }: HistoryPanelProps) {
             {displayNumbers.map((num, index) => (
               <div
                 key={`${num}-${index}`}
-                className="w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center font-semibold shadow-sm"
+                className={`w-12 h-12 rounded-lg text-white flex items-center justify-center font-semibold shadow-sm ${
+                  index === 0
+                    ? 'bg-gradient-to-br from-red-500 to-red-600'
+                    : 'bg-gradient-to-br from-emerald-500 to-teal-600'
+                }`}
               >
                 {num}
               </div>

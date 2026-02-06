@@ -1,63 +1,51 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T04:16:47.262Z",
+  "generatedAt": "2026-02-06T11:44:11.502Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 4,
+    "total": 3,
+    "implemented": 3,
     "items": [
       {
-        "id": "REQ-12",
-        "summary": "Move the “New Game” control to appear above the “Last Number” display in the main gameplay UI, while preserving the existing Yes/No confirmation behavior before starting a new game.",
+        "id": "REQ-1",
+        "summary": "Update the existing “Verify Called Numbers” (Verify Number) UI to use 15 separate inputs (positions 1–15) instead of a single comma/space-separated text field, while still allowing manual typing in any position.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/tambola/components/NewGameControl.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/features/tambola/components/GameControls.tsx"
+          "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx",
+          "frontend/src/features/tambola/verify/parseEnteredNumbers.ts"
         ],
         "matchedFiles": [
-          "frontend/src/features/tambola/components/NewGameControl.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/features/tambola/components/GameControls.tsx"
+          "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx"
         ]
       },
       {
-        "id": "REQ-13",
-        "summary": "Reduce the visual size of the “Last Number” display box, including the card padding and the circular number display, while keeping it responsive and readable on mobile and desktop.",
+        "id": "REQ-2",
+        "summary": "Add a voice recording option to the Verify Number section that records all numbers in one recording, transcribes speech into digits, and auto-fills the 1–15 input boxes in order, while keeping manual typing available as a fallback.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/tambola/components/LastNumberDisplay.tsx"
+          "frontend/src/features/tambola/voice/useSpeechRecognition.ts",
+          "frontend/src/features/tambola/verify/parseSpokenNumbers.ts",
+          "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/tambola/components/LastNumberDisplay.tsx"
+          "frontend/src/features/tambola/voice/useSpeechRecognition.ts",
+          "frontend/src/features/tambola/verify/parseSpokenNumbers.ts",
+          "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx"
         ]
       },
       {
-        "id": "REQ-14",
-        "summary": "Rename the primary draw button label from “Draw Next” to “Draw Number” everywhere it appears in the UI.",
+        "id": "REQ-3",
+        "summary": "Improve verification failure results so that when verification fails, the UI displays exactly which entered number(s) have not been called (instead of a generic “number not called” message).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/tambola/components/GameControls.tsx"
+          "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/tambola/components/GameControls.tsx"
-        ]
-      },
-      {
-        "id": "REQ-15",
-        "summary": "Reposition the “Undo” control so it appears after/below the Number Board area (i.e., rendered beneath the number grid), and remove the old “Undo” placement from the controls card.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/features/tambola/components/GameControls.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/features/tambola/components/GameControls.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx"
         ]
       }
     ]
@@ -67,10 +55,9 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/features/tambola/components/GameControls.tsx",
-    "frontend/src/features/tambola/components/LastNumberDisplay.tsx",
-    "frontend/src/features/tambola/components/NewGameControl.tsx",
+    "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx",
+    "frontend/src/features/tambola/verify/parseSpokenNumbers.ts",
+    "frontend/src/features/tambola/voice/useSpeechRecognition.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

@@ -34,7 +34,7 @@ export function NewGameControl({ onNewGame }: NewGameControlProps) {
         onClick={handleClick}
         variant="destructive"
         size="lg"
-        className="w-full"
+        className="w-full sm:w-auto"
       >
         <RotateCcw className="mr-2 h-5 w-5" />
         New Game

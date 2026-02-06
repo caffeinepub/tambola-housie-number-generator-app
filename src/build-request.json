@@ -1,87 +1,77 @@
 {
   "kind": "build_request",
-  "title": "Reorder controls, resize last-number display, rename draw button, and move Undo below board",
+  "title": "Add voice-to-digits autofill and clearer failure details in Verify Number",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-12",
-      "text": "Move the “New Game” control to appear above the “Last Number” display in the main gameplay UI, while preserving the existing Yes/No confirmation behavior before starting a new game.",
+      "id": "REQ-1",
+      "text": "Update the existing “Verify Called Numbers” (Verify Number) UI to use 15 separate inputs (positions 1–15) instead of a single comma/space-separated text field, while still allowing manual typing in any position.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-user-build"
         ],
         "quotes": [
-          "New game on the top than last number box"
+          "No now the setup is we manually enter 1-15 numbers to verify"
         ]
       },
       "acceptanceCriteria": [
-        "In the main gameplay screen, a “New Game” button is rendered above the Last Number display card.",
-        "Clicking “New Game” opens the existing confirmation dialog flow (Yes/No) and only starts a new game when “Yes” is confirmed.",
-        "The previous “New Game” placement within the controls area is removed so the UI contains a single clear “New Game” entry point."
+        "The Verify section renders exactly 15 input boxes clearly labeled or visually grouped as positions 1–15.",
+        "Each input accepts manual typing and can be edited independently.",
+        "Verification uses the values from these 15 inputs (ignoring empty inputs) as the entered numbers.",
+        "If no numbers are entered across all boxes, the UI shows an error message: “Please enter at least 1 number.”"
       ]
     },
     {
-      "id": "REQ-13",
-      "text": "Reduce the visual size of the “Last Number” display box, including the card padding and the circular number display, while keeping it responsive and readable on mobile and desktop.",
+      "id": "REQ-2",
+      "text": "Add a voice recording option to the Verify Number section that records all numbers in one recording, transcribes speech into digits, and auto-fills the 1–15 input boxes in order, while keeping manual typing available as a fallback.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-user-build"
         ],
         "quotes": [
-          "reduce the size of the box last number"
+          "i want that we speak and number entered in that box and than we will click on verify button",
+          "1-yes",
+          "2- all number in one recording",
+          "3. Should allow mannual typing"
         ]
       },
       "acceptanceCriteria": [
-        "The Last Number card uses smaller padding than the current design and occupies less vertical space in the left column.",
-        "The circular last-number element (and its placeholder state) is smaller than before, with appropriately reduced font sizing to match.",
-        "The component remains visually centered and does not overflow or clip at common mobile widths."
+        "A “Record” control is available in the Verify section; starting recording begins listening and provides a clear in-progress UI state (e.g., “Listening…” and a Stop button).",
+        "When recording is stopped (or recognition ends), the app transcribes the spoken audio to text using a browser-native approach (no external services).",
+        "The transcription is parsed into integers and the first 15 valid numbers are placed into input boxes 1–15 in order.",
+        "If more than 15 valid numbers are spoken, extras are ignored (no crash).",
+        "If the browser does not support speech recognition or permission is denied, the UI shows a clear error message and manual entry continues to work."
       ]
     },
     {
-      "id": "REQ-14",
-      "text": "Rename the primary draw button label from “Draw Next” to “Draw Number” everywhere it appears in the UI.",
+      "id": "REQ-3",
+      "text": "Improve verification failure results so that when verification fails, the UI displays exactly which entered number(s) have not been called (instead of a generic “number not called” message).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-user-build"
         ],
         "quotes": [
-          "rename draw next to draw number"
+          "in result when failed to verify show which number not called"
         ]
       },
       "acceptanceCriteria": [
-        "The button previously labeled “Draw Next” is labeled “Draw Number”.",
-        "No other user-facing text still shows “Draw Next”."
-      ]
-    },
-    {
-      "id": "REQ-15",
-      "text": "Reposition the “Undo” control so it appears after/below the Number Board area (i.e., rendered beneath the number grid), and remove the old “Undo” placement from the controls card.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "and undo after the number board"
-        ]
-      },
-      "acceptanceCriteria": [
-        "An “Undo” button is displayed below the Number Board component on the gameplay screen.",
-        "The Undo button keeps the same enabled/disabled behavior as before (disabled when undo is not allowed and/or when auto-draw is enabled).",
-        "The Undo button no longer appears in the main controls card area."
+        "If any entered numbers are not present in the called numbers list, the error state lists them (e.g., “Not called: 12, 45”).",
+        "The list of not-called numbers is unique and displayed in a stable, readable format.",
+        "If all entered numbers have been called, the success message remains and reflects the verified count (e.g., “All 7 numbers have been called”)."
       ]
     }
   ],
   "constraints": [
-    "Frontend user-facing text must be in English.",
-    "Do not modify files under frontend/src/components/ui or other immutable paths listed in SYSTEM_CONTEXT."
+    "Do not edit files under frontend/src/components/ui (Shadcn components are read-only and must be composed).",
+    "Do not edit immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx."
   ],
   "nonGoals": [
-    "No changes to Tambola draw/undo/reset game logic beyond UI placement and labels.",
-    "No backend (Motoko) changes."
+    "Do not add any backend (Motoko) changes for speech transcription.",
+    "Do not integrate any third-party speech-to-text APIs or external services.",
+    "Do not change the Tambola draw/undo/reset game logic outside of what is necessary to read calledNumbers for verification."
   ],
   "imageRequirements": {
     "required": [],

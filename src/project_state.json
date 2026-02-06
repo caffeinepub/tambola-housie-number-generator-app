@@ -1,130 +1,34 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 11,
-  "summary": "Create a Tambola (Housie) number generator app.",
+  "projectStateVersion": 3,
+  "summary": "Project now includes a “Verify Number” feature where users manually enter 1–15 numbers and verify them; scope expanded to add a voice recording option that transcribes spoken digits to auto-fill the 1–15 inputs and improves failure results to show which number(s) were not called/spoken.",
   "architectural_notes": [
-    "Reset/New Game actions should prompt a Yes/No confirmation modal to prevent accidental game state loss."
+    "Use speech-to-text to transcribe a single audio recording into a sequence of digits and map them into the 1–15 verification inputs; keep manual entry available as fallback."
   ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-create-the-tambola-number-generator-core-flow-initialize-a-new-game-containing-numbers-1-90-allow-drawing-the-next-random-uncalled-number-and-ensure-each-number-is-drawn-at-most-once-per-game",
-      "title": "Create the Tambola number generator core flow: initialize a new game containing numbers 1–90, allow drawing the next random uncalled number, and ensure each number is drawn at most once per game.",
+      "id": "feature-update-the-existing-verify-called-numbers-verify-number-ui-to-use-15-separate-inputs-positions-1-15-instead-of-a-single-comma-space-separated-text-field-while-still-allowing-manual-typing-in-any-position",
+      "title": "Update the existing “Verify Called Numbers” (Verify Number) UI to use 15 separate inputs (positions 1–15) instead of a single comma/space-separated text field, while still allowing manual typing in any position.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-build-the-main-ui-for-gameplay-with-a-a-prominent-display-of-the-most-recently-drawn-number-b-a-visual-1-90-board-grid-that-highlights-called-numbers-and-c-a-chronological-history-list-of-called-numbers",
-      "title": "Build the main UI for gameplay with: (a) a prominent display of the most recently drawn number, (b) a visual 1–90 board/grid that highlights called numbers, and (c) a chronological history list of called numbers.",
+      "id": "feature-add-a-voice-recording-option-to-the-verify-number-section-that-records-all-numbers-in-one-recording-transcribes-speech-into-digits-and-auto-fills-the-1-15-input-boxes-in-order-while-keeping-manual-typing-available-as-a-fallback",
+      "title": "Add a voice recording option to the Verify Number section that records all numbers in one recording, transcribes speech into digits, and auto-fills the 1–15 input boxes in order, while keeping manual typing available as a fallback.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-game-controls-new-game-reset-undo-last-draw-and-an-optional-auto-draw-mode-with-a-user-selectable-interval-e-g-1-10-seconds-that-can-be-started-stopped",
-      "title": "Add game controls: “New Game/Reset”, “Undo Last Draw”, and an optional “Auto Draw” mode with a user-selectable interval (e.g., 1–10 seconds) that can be started/stopped.",
+      "id": "feature-improve-verification-failure-results-so-that-when-verification-fails-the-ui-displays-exactly-which-entered-number-s-have-not-been-called-instead-of-a-generic-number-not-called-message",
+      "title": "Improve verification failure results so that when verification fails, the UI displays exactly which entered number(s) have not been called (instead of a generic “number not called” message).",
       "reqIds": [
         "REQ-3"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-persist-the-current-game-state-called-numbers-remaining-pool-order-auto-draw-settings-in-the-browser-so-a-page-refresh-can-restore-the-ongoing-game",
-      "title": "Persist the current game state (called numbers, remaining pool/order, auto-draw settings) in the browser so a page refresh can restore the ongoing game.",
-      "reqIds": [
-        "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-apply-a-consistent-creative-visual-theme-across-the-app-colors-typography-spacing-and-components-appropriate-for-a-fun-game-night-tool-keep-it-responsive-for-mobile-and-desktop",
-      "title": "Apply a consistent, creative visual theme across the app (colors, typography, spacing, and components) appropriate for a fun game-night tool; keep it responsive for mobile and desktop.",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-generated-static-images-to-the-frontend-and-use-them-in-the-ui-e-g-app-icon-header-mark-and-a-subtle-background-pattern-store-these-assets-under-frontend-public-assets-generated-and-reference-them-directly-from-the-frontend-not-via-the-backend",
-      "title": "Add generated static images to the frontend and use them in the UI (e.g., app icon / header mark and a subtle background pattern). Store these assets under frontend/public/assets/generated and reference them directly from the frontend (not via the backend).",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-the-call-history-list-ui-to-display-the-most-recently-called-number-first-reverse-chronological-order-without-changing-the-underlying-game-state-order-used-for-gameplay-undo-logic",
-      "title": "Update the Call History list UI to display the most recently called number first (reverse chronological order), without changing the underlying game state order used for gameplay/undo logic.",
-      "reqIds": [
-        "REQ-7"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-the-main-gameplay-layout-to-swap-the-on-screen-positions-of-the-number-board-and-the-call-history-panel-keeping-the-layout-responsive-for-mobile-and-desktop",
-      "title": "Update the main gameplay layout to swap the on-screen positions of the Number Board and the Call History panel, keeping the layout responsive for mobile and desktop.",
-      "reqIds": [
-        "REQ-8"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-new-quick-reset-control-to-the-gameplay-controls-area-alongside-existing-buttons",
-      "title": "Add a new \"Quick Reset\" control to the gameplay controls area alongside existing buttons.",
-      "reqIds": [
-        "REQ-9"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-show-a-confirmation-popup-yes-no-whenever-the-user-triggers-either-quick-reset-or-new-game-and-only-proceed-with-the-action-when-the-user-confirms-yes",
-      "title": "Show a confirmation popup (Yes/No) whenever the user triggers either Quick Reset or New Game, and only proceed with the action when the user confirms \"Yes\".",
-      "reqIds": [
-        "REQ-10"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-distinct-handlers-for-quick-reset-vs-new-game-so-that-a-quick-reset-resets-the-game-numbers-state-called-numbers-remaining-pool-last-drawn-completion-and-stops-auto-draw-if-running-while-preserving-the-current-auto-draw-interval-setting-b-new-game-performs-a-full-reset-including-returning-auto-draw-settings-enabled-interval-to-their-defaults",
-      "title": "Implement distinct handlers for Quick Reset vs New Game so that: (a) Quick Reset resets the game numbers state (called numbers, remaining pool, last drawn, completion) and stops auto-draw if running, while preserving the current auto-draw interval setting; (b) New Game performs a full reset including returning auto-draw settings (enabled + interval) to their defaults.",
-      "reqIds": [
-        "REQ-11"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-move-the-new-game-control-to-appear-above-the-last-number-display-in-the-main-gameplay-ui-while-preserving-the-existing-yes-no-confirmation-behavior-before-starting-a-new-game",
-      "title": "Move the “New Game” control to appear above the “Last Number” display in the main gameplay UI, while preserving the existing Yes/No confirmation behavior before starting a new game.",
-      "reqIds": [
-        "REQ-12"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-reduce-the-visual-size-of-the-last-number-display-box-including-the-card-padding-and-the-circular-number-display-while-keeping-it-responsive-and-readable-on-mobile-and-desktop",
-      "title": "Reduce the visual size of the “Last Number” display box, including the card padding and the circular number display, while keeping it responsive and readable on mobile and desktop.",
-      "reqIds": [
-        "REQ-13"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-rename-the-primary-draw-button-label-from-draw-next-to-draw-number-everywhere-it-appears-in-the-ui",
-      "title": "Rename the primary draw button label from “Draw Next” to “Draw Number” everywhere it appears in the UI.",
-      "reqIds": [
-        "REQ-14"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-reposition-the-undo-control-so-it-appears-after-below-the-number-board-area-i-e-rendered-beneath-the-number-grid-and-remove-the-old-undo-placement-from-the-controls-card",
-      "title": "Reposition the “Undo” control so it appears after/below the Number Board area (i.e., rendered beneath the number grid), and remove the old “Undo” placement from the controls card.",
-      "reqIds": [
-        "REQ-15"
       ],
       "version": 1
     }
@@ -132,55 +36,18 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Build a Tambola (Housie) number generator app",
+      "summary": "Add voice recording option to Verify Number: record all numbers in one recording, transcribe to digits, and auto-fill the 1–15 input boxes while still allowing manual typing.",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Change call history list order so the most recent called number appears first (reverse chronological)",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-3",
-      "summary": "Change/swap the UI positions of the number board and the call history panel",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "Add a Quick Reset button and show confirmation popups for both Reset and New Game actions (Yes/No)",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-5",
-      "summary": "Move the \"New Game\" control above the \"Last Number\" display (place New Game at the top, then the last number box)",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-6",
-      "summary": "Reduce the size of the \"Last Number\" display box",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-7",
-      "summary": "Rename the \"Draw Next\" button to \"Draw Number\"",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-8",
-      "summary": "Reposition the \"Undo\" control to appear after/below the number board",
+      "summary": "On verification failure, display which specific number(s)/input positions were not called/spoken (missing) to clarify why verification failed.",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "gameProjectType": "none",
-  "projectName": "Tambola (Housie) number generator app",
+  "projectName": "Add voice-to-digits autofill and clearer failure details in Verify Number",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

@@ -2,12 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-move-the-new-game-control-to-appear-above-the-last-number-display-in-the-main-gameplay-ui-while-preserving-the-existing-yes-no-confirmation-behavior-before-starting-a-new-game",
-      "featureTitle": "Move the “New Game” control to appear above the “Last Number” display in the main gameplay UI, while preserving the existing Yes/No confirmation behavior before starting a new game.",
+      "featureId": "feature-update-the-existing-verify-called-numbers-verify-number-ui-to-use-15-separate-inputs-positions-1-15-instead-of-a-single-comma-space-separated-text-field-while-still-allowing-manual-typing-in-any-position",
+      "featureTitle": "Update the existing “Verify Called Numbers” (Verify Number) UI to use 15 separate inputs (positions 1–15) instead of a single comma/space-separated text field, while still allowing manual typing in any position.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/features/tambola/components/GameControls.tsx",
-        "frontend/src/features/tambola/components/NewGameControl.tsx"
+        "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -17,15 +15,17 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-12"
+        "REQ-1"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-reduce-the-visual-size-of-the-last-number-display-box-including-the-card-padding-and-the-circular-number-display-while-keeping-it-responsive-and-readable-on-mobile-and-desktop",
-      "featureTitle": "Reduce the visual size of the “Last Number” display box, including the card padding and the circular number display, while keeping it responsive and readable on mobile and desktop.",
+      "featureId": "feature-add-a-voice-recording-option-to-the-verify-number-section-that-records-all-numbers-in-one-recording-transcribes-speech-into-digits-and-auto-fills-the-1-15-input-boxes-in-order-while-keeping-manual-typing-available-as-a-fallback",
+      "featureTitle": "Add a voice recording option to the Verify Number section that records all numbers in one recording, transcribes speech into digits, and auto-fills the 1–15 input boxes in order, while keeping manual typing available as a fallback.",
       "files": [
-        "frontend/src/features/tambola/components/LastNumberDisplay.tsx"
+        "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx",
+        "frontend/src/features/tambola/verify/parseSpokenNumbers.ts",
+        "frontend/src/features/tambola/voice/useSpeechRecognition.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -35,15 +35,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-13"
+        "REQ-2"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-rename-the-primary-draw-button-label-from-draw-next-to-draw-number-everywhere-it-appears-in-the-ui",
-      "featureTitle": "Rename the primary draw button label from “Draw Next” to “Draw Number” everywhere it appears in the UI.",
+      "featureId": "feature-improve-verification-failure-results-so-that-when-verification-fails-the-ui-displays-exactly-which-entered-number-s-have-not-been-called-instead-of-a-generic-number-not-called-message",
+      "featureTitle": "Improve verification failure results so that when verification fails, the UI displays exactly which entered number(s) have not been called (instead of a generic “number not called” message).",
       "files": [
-        "frontend/src/features/tambola/components/GameControls.tsx"
+        "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -53,26 +53,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-14"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-reposition-the-undo-control-so-it-appears-after-below-the-number-board-area-i-e-rendered-beneath-the-number-grid-and-remove-the-old-undo-placement-from-the-controls-card",
-      "featureTitle": "Reposition the “Undo” control so it appears after/below the Number Board area (i.e., rendered beneath the number grid), and remove the old “Undo” placement from the controls card.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/features/tambola/components/GameControls.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-15"
+        "REQ-3"
       ],
       "confidence": "high"
     }

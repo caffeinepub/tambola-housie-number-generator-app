@@ -1,39 +1,42 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T04:16:47.259Z",
-  "summary": "All four requested UI changes appear to be implemented: New Game is moved above Last Number with a Yes/No confirmation dialog, Last Number display is resized smaller, the draw button label is changed to “Draw Number”, and Undo is moved below the Number Board and removed from the controls card. However, the diff also includes additional unrequested theming/layout changes (e.g., global styles/Tailwind config updates and moving the NumberBoard out of the main 3-column grid).",
-  "missing_requirements": [],
-  "hallucinated_features": [
+  "generatedAt": "2026-02-06T11:44:11.499Z",
+  "summary": "Diff adds speech transcript parsing (browser-native), a speech recognition hook, and updates VerifyCalledNumbers to use 15 separate inputs, auto-fill from speech, and show specific not-called numbers on failure. Some acceptance-criteria UI details are not verifiable from the truncated render code, especially around the in-progress recording UI and surfacing speech-recognition errors to the user.",
+  "missing_requirements": [
     {
-      "description": "Global visual theme changes (warm amber/orange palette, background pattern overlay) beyond the requested control reordering/label changes.",
-      "reason": "The BuildRequest did not ask for app-wide theme changes; only specific UI placement/label/size adjustments were requested.",
+      "id": "REQ-2",
+      "requirement": "If the browser does not support speech recognition or permission is denied, the UI shows a clear error message and manual entry continues to work.",
+      "reason": "Unsupported-browser handling is implemented (sets an error result message), and the hook sets an error for permission denied ('not-allowed'), but the diff snippet does not show that `speechError` is displayed in the Verify UI. Since the render portion is truncated, it’s not verifiable that permission-denied errors are surfaced to the user.",
       "evidence": [
-        "frontend-file-summaries.txt (frontend/src/index.css, frontend/tailwind.config.js)"
+        "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx",
+        "frontend/src/features/tambola/voice/useSpeechRecognition.ts"
       ]
     },
     {
-      "description": "Layout change placing the NumberBoard outside the main grid (below the 3-column layout), not just moving the Undo button.",
-      "reason": "REQ-15 requests only moving the Undo control below the Number Board; it does not request relocating the Number Board itself in the page layout.",
+      "id": "REQ-2",
+      "requirement": "Starting recording provides a clear in-progress UI state (e.g., “Listening…” and a Stop button).",
+      "reason": "The component imports mic icons and has a comment 'Voice Recording Control', but the relevant JSX is truncated, so it cannot be confirmed that a 'Listening…' state and Stop control are rendered while recording.",
       "evidence": [
-        "frontend/src/App.tsx"
+        "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx"
       ]
     },
     {
-      "description": "Added a dedicated NewGameControl component with icon styling (RotateCcw) rather than just repositioning an existing control.",
-      "reason": "REQ-12 asks to move the New Game control and preserve confirmation behavior, but does not require creating a new component and adding an icon; this is additional implementation not explicitly requested.",
+      "id": "REQ-1",
+      "requirement": "The Verify section renders exactly 15 input boxes clearly labeled or visually grouped as positions 1–15.",
+      "reason": "State is initialized as `Array(15)` and the label text mentions positions 1–15, but the JSX that renders the inputs is truncated, so it cannot be confirmed that exactly 15 inputs are rendered and clearly labeled/grouped 1–15.",
       "evidence": [
-        "frontend/src/features/tambola/components/NewGameControl.tsx"
+        "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx"
       ]
     }
   ],
-  "confidence": 0.72,
+  "hallucinated_features": [],
+  "confidence": 0.62,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
-    "frontend/src/features/tambola/components/GameControls.tsx",
-    "frontend/src/features/tambola/components/LastNumberDisplay.tsx",
-    "frontend/src/features/tambola/components/NewGameControl.tsx",
+    "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx",
+    "frontend/src/features/tambola/verify/parseSpokenNumbers.ts",
+    "frontend/src/features/tambola/voice/useSpeechRecognition.ts",
     "project_state.json"
   ]
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { TambolaGameState, AutoDrawSettings } from './types';
+import type { TambolaGameState, AutoDrawSettings, GameAction } from './types';
 import {
   loadPersistedState,
   savePersistedState,
@@ -17,6 +17,8 @@ export function useTambolaGame() {
     const persisted = loadPersistedState();
     return persisted?.autoDrawSettings || createInitialAutoDrawSettings();
   });
+
+  const [lastAction, setLastAction] = useState<GameAction>('idle');
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -41,6 +43,7 @@ export function useTambolaGame() {
       lastDrawn: drawnNumber,
       isComplete: newRemainingPool.length === 0,
     });
+    setLastAction('draw');
   }, [gameState.remainingPool, gameState.calledNumbers]);
 
   // Undo last draw
@@ -57,6 +60,7 @@ export function useTambolaGame() {
       lastDrawn: newCalledNumbers.length > 0 ? newCalledNumbers[newCalledNumbers.length - 1] : null,
       isComplete: false,
     });
+    setLastAction('undo');
   }, [gameState.calledNumbers, gameState.remainingPool]);
 
   // Stop any running auto-draw timer
@@ -75,6 +79,7 @@ export function useTambolaGame() {
       enabled: false,
     }));
     stopAutoDrawTimer();
+    setLastAction('reset');
     // Persist the new state
     savePersistedState({
       gameState: createInitialGameState(),
@@ -90,6 +95,7 @@ export function useTambolaGame() {
     setGameState(createInitialGameState());
     setAutoDrawSettings(createInitialAutoDrawSettings());
     stopAutoDrawTimer();
+    setLastAction('new-game');
     // Persist the new state
     savePersistedState({
       gameState: createInitialGameState(),
@@ -137,6 +143,7 @@ export function useTambolaGame() {
   return {
     gameState,
     autoDrawSettings,
+    lastAction,
     drawNext,
     undoLastDraw,
     quickReset,

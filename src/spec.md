@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Adjust the Tambola gameplay UI layout and labels for clearer control placement and a more compact Last Number display.
+**Goal:** Make “Verify Called Numbers” easier and faster by using 15 position-based inputs, adding voice-to-digits autofill, and showing clear verification failure details.
 
 **Planned changes:**
-- Move the “New Game” button to appear above the “Last Number” display, keeping the existing Yes/No confirmation flow, and remove its previous placement from the controls area.
-- Reduce the visual size of the “Last Number” display card (padding) and the circular number/placeholder element while keeping it responsive and readable on mobile and desktop.
-- Rename the primary draw button label from “Draw Next” to “Draw Number” everywhere in the UI.
-- Move the “Undo” button to render below the Number Board (beneath the number grid), preserving existing enabled/disabled behavior, and remove it from the controls card.
+- Replace the single comma/space-separated Verify Number input with exactly 15 separate input boxes (positions 1–15) that can each be manually typed/edited; verification reads these values and ignores empty boxes.
+- Add a Record/Stop voice control in the Verify section using browser-native speech recognition to transcribe one recording, parse digits, and autofill the first 15 valid numbers into inputs 1–15 (with clear listening state and graceful fallback/errors if unsupported or permission is denied).
+- Improve verification results messaging to list the specific entered number(s) that have not been called (unique, stable formatting) and keep the success message reflecting the verified count.
 
-**User-visible outcome:** The gameplay screen shows “New Game” above a smaller Last Number box, the draw button reads “Draw Number,” and “Undo” appears beneath the number grid instead of in the controls area.
+**User-visible outcome:** Users can verify called numbers by typing into 15 individual slots or by speaking numbers once to auto-fill them, and if verification fails they can see exactly which numbers were not called.

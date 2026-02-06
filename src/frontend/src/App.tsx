@@ -1,11 +1,15 @@
-import { useTambolaGame } from './features/tambola/useTambolaGame';
-import { NewGameControl } from './features/tambola/components/NewGameControl';
-import { LastNumberDisplay } from './features/tambola/components/LastNumberDisplay';
+import { useState } from 'react';
 import { NumberBoard } from './features/tambola/components/NumberBoard';
 import { HistoryPanel } from './features/tambola/components/HistoryPanel';
 import { GameControls } from './features/tambola/components/GameControls';
-import { Button } from '@/components/ui/button';
-import { Heart, Undo2 } from 'lucide-react';
+import { NewGameControl } from './features/tambola/components/NewGameControl';
+import { VoiceAnnouncementsPanel } from './features/tambola/components/VoiceAnnouncementsPanel';
+import { HostVoiceManagerDialog } from './features/tambola/components/HostVoiceManagerDialog';
+import { VerifyCalledNumbers } from './features/tambola/components/VerifyCalledNumbers';
+import { useTambolaGame } from './features/tambola/useTambolaGame';
+import { useVoiceSettings } from './features/tambola/voice/useVoiceSettings';
+import { useVoiceAnnouncements } from './features/tambola/voice/useVoiceAnnouncements';
+import { Dices } from 'lucide-react';
 
 function App() {
   const {
@@ -19,95 +23,118 @@ function App() {
     setAutoDrawInterval,
     canDraw,
     canUndo,
+    lastAction,
   } = useTambolaGame();
+
+  const {
+    settings: voiceSettings,
+    setEnabled: setVoiceEnabled,
+    setReadingMode,
+    setVoiceSourcePriority,
+  } = useVoiceSettings();
+
+  const { announceNumber } = useVoiceAnnouncements();
+  const [isVoiceManagerOpen, setIsVoiceManagerOpen] = useState(false);
+
+  const handleDraw = () => {
+    drawNext();
+  };
+
+  const handleNewGame = () => {
+    newGame();
+  };
+
+  // Trigger voice announcement when a number is drawn (manual or auto)
+  // Only announce on 'draw' action, not on 'undo' or 'reset'
+  const prevLastNumberRef = useState<number | null>(null);
+  const prevLastActionRef = useState<string | null>(null);
+
+  if (
+    gameState.lastDrawn !== null &&
+    gameState.lastDrawn !== prevLastNumberRef[0] &&
+    lastAction === 'draw' &&
+    lastAction !== prevLastActionRef[0] &&
+    voiceSettings.enabled
+  ) {
+    announceNumber(gameState.lastDrawn, voiceSettings.readingMode, voiceSettings.voiceSourcePriority);
+    prevLastNumberRef[0] = gameState.lastDrawn;
+    prevLastActionRef[0] = lastAction;
+  }
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-3">
-            <img
-              src="/assets/generated/tambola-icon.dim_512x512.png"
-              alt="Tambola"
-              className="w-12 h-12 rounded-lg shadow-md"
-            />
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
-                Tambola Number Generator
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Classic Housie game for your next game night
-              </p>
+      {/* Header - Not sticky on mobile, sticky on sm+ */}
+      <header className="border-b bg-card/50 backdrop-blur-sm sm:sticky sm:top-0 z-10">
+        <div className="container mx-auto px-2 sm:px-4 py-3 sm:py-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink">
+              <div className="p-2 bg-primary/10 rounded-lg flex-shrink-0">
+                <Dices className="h-6 w-6 text-primary" />
+              </div>
+              <div className="min-w-0">
+                <h1 className="text-2xl font-bold tracking-tight truncate">Tambola</h1>
+                <p className="text-sm text-muted-foreground">Number Caller</p>
+              </div>
+            </div>
+            <div className="w-full sm:w-auto flex-shrink-0">
+              <NewGameControl onNewGame={handleNewGame} />
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main content */}
-      <main className="container mx-auto px-4 py-6 sm:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left column - New Game, Last number and controls */}
-          <div className="space-y-4">
-            <NewGameControl onNewGame={newGame} />
-            <LastNumberDisplay
-              lastDrawn={gameState.lastDrawn}
-              isComplete={gameState.isComplete}
-            />
+      {/* Main Content */}
+      <main className="container mx-auto px-2 sm:px-4 py-6 sm:py-8 app-main-content">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+          {/* History Panel - order-1 on mobile, lg:order-1 on desktop (left column, top) */}
+          <div className="order-1 lg:order-1">
+            <HistoryPanel calledNumbers={gameState.calledNumbers} />
+          </div>
+
+          {/* Game Controls - order-2 on mobile (after history), lg:order-3 on desktop (right column, top) */}
+          <div className="order-2 lg:order-3 lg:col-span-2">
             <GameControls
               canDraw={canDraw}
               isComplete={gameState.isComplete}
               autoDrawEnabled={autoDrawSettings.enabled}
               autoDrawInterval={autoDrawSettings.intervalSeconds}
-              onDrawNext={drawNext}
+              onDrawNext={handleDraw}
               onQuickReset={quickReset}
               onAutoDrawToggle={setAutoDrawEnabled}
               onIntervalChange={setAutoDrawInterval}
             />
           </div>
 
-          {/* Middle column - Call History */}
-          <div className="lg:col-span-2">
-            <HistoryPanel calledNumbers={gameState.calledNumbers} />
+          {/* Number Board - order-3 on mobile (after controls), lg:order-4 on desktop (right column, bottom) */}
+          <div className="order-3 lg:order-4 lg:col-span-2">
+            <NumberBoard calledNumbers={gameState.calledNumbers} />
           </div>
-        </div>
 
-        {/* Number board - below grid */}
-        <div className="mt-6">
-          <NumberBoard calledNumbers={gameState.calledNumbers} />
-        </div>
+          {/* Voice Announcements Panel - order-4 on mobile, lg:order-2 on desktop (left column, middle) */}
+          <div className="order-4 lg:order-2">
+            <VoiceAnnouncementsPanel
+              voiceEnabled={voiceSettings.enabled}
+              readingMode={voiceSettings.readingMode}
+              voiceSourcePriority={voiceSettings.voiceSourcePriority}
+              onVoiceToggle={setVoiceEnabled}
+              onReadingModeChange={setReadingMode}
+              onVoiceSourcePriorityChange={setVoiceSourcePriority}
+              onOpenVoiceManager={() => setIsVoiceManagerOpen(true)}
+            />
+          </div>
 
-        {/* Undo button - below number board */}
-        <div className="mt-4 flex justify-center">
-          <Button
-            onClick={undoLastDraw}
-            disabled={!canUndo || autoDrawSettings.enabled}
-            variant="outline"
-            size="lg"
-            className="min-w-[200px]"
-          >
-            <Undo2 className="mr-2 h-5 w-5" />
-            Undo
-          </Button>
+          {/* Verify Called Numbers - order-5 on mobile (last), lg:order-5 on desktop (left column, bottom) */}
+          <div className="order-5 lg:order-5">
+            <VerifyCalledNumbers calledNumbers={gameState.calledNumbers} />
+          </div>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t bg-card mt-12">
-        <div className="container mx-auto px-4 py-6">
-          <p className="text-center text-sm text-muted-foreground">
-            © 2026. Built with <Heart className="inline h-4 w-4 text-red-500 fill-red-500" /> using{' '}
-            <a
-              href="https://caffeine.ai"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold hover:text-foreground transition-colors inline-flex items-center gap-1"
-            >
-              caffeine.ai
-            </a>
-          </p>
-        </div>
-      </footer>
+      {/* Voice Manager Dialog */}
+      <HostVoiceManagerDialog
+        open={isVoiceManagerOpen}
+        onOpenChange={setIsVoiceManagerOpen}
+      />
     </div>
   );
 }
