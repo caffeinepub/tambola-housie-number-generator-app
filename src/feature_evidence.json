@@ -1,0 +1,23 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-update-the-main-gameplay-layout-to-swap-the-on-screen-positions-of-the-number-board-and-the-call-history-panel-keeping-the-layout-responsive-for-mobile-and-desktop",
+      "featureTitle": "Update the main gameplay layout to swap the on-screen positions of the Number Board and the Call History panel, keeping the layout responsive for mobile and desktop.",
+      "files": [
+        "frontend/src/App.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

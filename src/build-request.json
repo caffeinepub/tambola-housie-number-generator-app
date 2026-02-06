@@ -1,0 +1,40 @@
+{
+  "kind": "build_request",
+  "title": "Swap the UI positions of the Number Board and Call History panels",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-8",
+      "text": "Update the main gameplay layout to swap the on-screen positions of the Number Board and the Call History panel, keeping the layout responsive for mobile and desktop.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "recent-messages"
+        ],
+        "quotes": [
+          "Change the position of number board and call history"
+        ]
+      },
+      "acceptanceCriteria": [
+        "On desktop breakpoints, the Call History panel renders in the area where the Number Board previously rendered, and the Number Board renders in the area where the Call History panel previously rendered.",
+        "On mobile breakpoints, the relative order/placement of Call History vs Number Board is swapped compared to the current implementation (i.e., the same swap applies responsively, not only on desktop).",
+        "No gameplay logic changes: called numbers, undo behavior, auto-draw behavior, and persistence remain unchanged.",
+        "The Call History list still displays most-recent-first (reverse chronological display) as it does currently.",
+        "No duplicate HistoryPanel instances are shown at the same breakpoint (e.g., avoid rendering both the lg:hidden and lg:block versions simultaneously after the layout change)."
+      ]
+    }
+  ],
+  "constraints": [
+    "Frontend immutable paths must not be modified: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
+    "Keep backend as single-actor; no backend changes are required for this UI-only request."
+  ],
+  "nonGoals": [
+    "Changing call-history sorting behavior beyond the existing most-recent-first display.",
+    "Changing Tambola game rules, randomization, undo/reset behavior, or localStorage persistence.",
+    "Adding new controls or new panels unrelated to swapping the positions of Number Board and Call History."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.75rem;
+        
+        /* Warm, vibrant game-night palette */
+        --background: 0.98 0.01 45;
+        --foreground: 0.2 0.02 30;
+        
+        --card: 1 0 0;
+        --card-foreground: 0.2 0.02 30;
+        
+        --popover: 1 0 0;
+        --popover-foreground: 0.2 0.02 30;
+        
+        --primary: 0.65 0.18 45;
+        --primary-foreground: 0.98 0 0;
+        
+        --secondary: 0.95 0.02 45;
+        --secondary-foreground: 0.2 0.02 30;
+        
+        --muted: 0.96 0.01 45;
+        --muted-foreground: 0.55 0.02 30;
+        
+        --accent: 0.92 0.03 45;
+        --accent-foreground: 0.2 0.02 30;
+        
+        --destructive: 0.55 0.22 25;
+        --destructive-foreground: 0.98 0 0;
+        
+        --border: 0.9 0.01 45;
+        --input: 0.9 0.01 45;
+        --ring: 0.65 0.18 45;
+        
+        --chart-1: 0.65 0.18 45;
+        --chart-2: 0.6 0.15 160;
+        --chart-3: 0.55 0.18 280;
+        --chart-4: 0.7 0.2 120;
+        --chart-5: 0.5 0.2 340;
+    }
+
+    .dark {
+        --background: 0.15 0.02 30;
+        --foreground: 0.95 0.01 45;
+        
+        --card: 0.2 0.02 30;
+        --card-foreground: 0.95 0.01 45;
+        
+        --popover: 0.18 0.02 30;
+        --popover-foreground: 0.95 0.01 45;
+        
+        --primary: 0.7 0.2 45;
+        --primary-foreground: 0.15 0.02 30;
+        
+        --secondary: 0.25 0.02 30;
+        --secondary-foreground: 0.95 0.01 45;
+        
+        --muted: 0.25 0.02 30;
+        --muted-foreground: 0.6 0.02 30;
+        
+        --accent: 0.3 0.03 35;
+        --accent-foreground: 0.95 0.01 45;
+        
+        --destructive: 0.6 0.24 25;
+        --destructive-foreground: 0.95 0.01 45;
+        
+        --border: 0.3 0.02 30;
+        --input: 0.3 0.02 30;
+        --ring: 0.7 0.2 45;
+        
+        --chart-1: 0.7 0.2 45;
+        --chart-2: 0.65 0.18 160;
+        --chart-3: 0.6 0.2 280;
+        --chart-4: 0.75 0.22 120;
+        --chart-5: 0.55 0.22 340;
+    }
+
+    * {
+        @apply border-border;
+    }
+    
+    body {
+        @apply bg-background text-foreground;
+        background-image: url('/assets/generated/tambola-pattern.dim_1920x1080.png');
+        background-repeat: repeat;
+        background-size: 600px;
+        background-attachment: fixed;
+        position: relative;
+    }
+    
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: oklch(var(--background) / 0.92);
+        pointer-events: none;
+        z-index: -1;
+    }
+}

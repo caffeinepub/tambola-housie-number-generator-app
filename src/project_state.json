@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 7,
+  "summary": "Create a Tambola (Housie) number generator app.",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-create-the-tambola-number-generator-core-flow-initialize-a-new-game-containing-numbers-1-90-allow-drawing-the-next-random-uncalled-number-and-ensure-each-number-is-drawn-at-most-once-per-game",
+      "title": "Create the Tambola number generator core flow: initialize a new game containing numbers 1–90, allow drawing the next random uncalled number, and ensure each number is drawn at most once per game.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-main-ui-for-gameplay-with-a-a-prominent-display-of-the-most-recently-drawn-number-b-a-visual-1-90-board-grid-that-highlights-called-numbers-and-c-a-chronological-history-list-of-called-numbers",
+      "title": "Build the main UI for gameplay with: (a) a prominent display of the most recently drawn number, (b) a visual 1–90 board/grid that highlights called numbers, and (c) a chronological history list of called numbers.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-game-controls-new-game-reset-undo-last-draw-and-an-optional-auto-draw-mode-with-a-user-selectable-interval-e-g-1-10-seconds-that-can-be-started-stopped",
+      "title": "Add game controls: “New Game/Reset”, “Undo Last Draw”, and an optional “Auto Draw” mode with a user-selectable interval (e.g., 1–10 seconds) that can be started/stopped.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-persist-the-current-game-state-called-numbers-remaining-pool-order-auto-draw-settings-in-the-browser-so-a-page-refresh-can-restore-the-ongoing-game",
+      "title": "Persist the current game state (called numbers, remaining pool/order, auto-draw settings) in the browser so a page refresh can restore the ongoing game.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-consistent-creative-visual-theme-across-the-app-colors-typography-spacing-and-components-appropriate-for-a-fun-game-night-tool-keep-it-responsive-for-mobile-and-desktop",
+      "title": "Apply a consistent, creative visual theme across the app (colors, typography, spacing, and components) appropriate for a fun game-night tool; keep it responsive for mobile and desktop.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-generated-static-images-to-the-frontend-and-use-them-in-the-ui-e-g-app-icon-header-mark-and-a-subtle-background-pattern-store-these-assets-under-frontend-public-assets-generated-and-reference-them-directly-from-the-frontend-not-via-the-backend",
+      "title": "Add generated static images to the frontend and use them in the UI (e.g., app icon / header mark and a subtle background pattern). Store these assets under frontend/public/assets/generated and reference them directly from the frontend (not via the backend).",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-call-history-list-ui-to-display-the-most-recently-called-number-first-reverse-chronological-order-without-changing-the-underlying-game-state-order-used-for-gameplay-undo-logic",
+      "title": "Update the Call History list UI to display the most recently called number first (reverse chronological order), without changing the underlying game state order used for gameplay/undo logic.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-main-gameplay-layout-to-swap-the-on-screen-positions-of-the-number-board-and-the-call-history-panel-keeping-the-layout-responsive-for-mobile-and-desktop",
+      "title": "Update the main gameplay layout to swap the on-screen positions of the Number Board and the Call History panel, keeping the layout responsive for mobile and desktop.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Build a Tambola (Housie) number generator app",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Change call history list order so the most recent called number appears first (reverse chronological)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Change/swap the UI positions of the number board and the call history panel",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Tambola (Housie) number generator app",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

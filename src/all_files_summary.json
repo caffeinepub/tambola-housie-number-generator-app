@@ -1,0 +1,21 @@
+{
+  "backend/main.mo": "Empty Motoko actor definition.",
+  "feature_evidence.json": "Feature evidence report describing a layout update affecting App.tsx.",
+  "frontend-file-summaries.txt": "Prewritten summaries of all frontend source files for reference.",
+  "frontend/index.css": "Tailwind base and theme variable definitions for light/dark modes using OKLCH colors.",
+  "frontend/index.html": "Basic HTML entry point loading the Tambola React app.",
+  "frontend/src/App.tsx": "Main React layout combining last number display, controls, history panel, and number board in a responsive grid.",
+  "frontend/src/features/tambola/components/GameControls.tsx": "UI card with draw, undo, reset controls and auto‑draw toggle plus interval slider.",
+  "frontend/src/features/tambola/components/HistoryPanel.tsx": "Displays called numbers in reverse order inside a scrollable card.",
+  "frontend/src/features/tambola/components/LastNumberDisplay.tsx": "Shows the last drawn number or placeholder with completion message styling.",
+  "frontend/src/features/tambola/components/NumberBoard.tsx": "90‑number grid marking called numbers with highlighted gradient styling.",
+  "frontend/src/features/tambola/storage.ts": "localStorage helpers and creators for initial game and auto‑draw state.",
+  "frontend/src/features/tambola/types.ts": "Type definitions for Tambola game state, auto‑draw settings, and persisted state.",
+  "frontend/src/features/tambola/useTambolaGame.ts": "React hook managing Tambola logic including draw, undo, reset, persistence, and auto‑draw timer.",
+  "frontend/src/hooks/useActor.ts": "Creates and manages authenticated/anonymous backend actors with React Query and identity updates.",
+  "frontend/src/hooks/useInternetIdentity.ts": "Provides a React context and provider for Internet Identity authentication, handling identity loading, login, logout, and status tracking.",
+  "frontend/src/index.css": "Defines Tailwind base layers and theme variables plus global styles including background pattern and dark mode palettes.",
+  "frontend/src/main.tsx": "Bootstraps the React app, wrapping it with React Query and the Internet Identity provider.",
+  "frontend/tailwind.config.js": "Configures Tailwind with custom colors, animations, fonts, plugins, and theme extensions tied to CSS variables.",
+  "project_state.json": "Describes project metadata and feature list for a Tambola number generator app."
+}

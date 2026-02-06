@@ -1,0 +1,25 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Swap Number Board and Call History panel positions in responsive gameplay layout",
+  "requirements": [
+    {
+      "id": "REQ-8",
+      "summary": "Swap the rendered positions of the NumberBoard and HistoryPanel in the main gameplay layout for both mobile and desktop without changing gameplay logic.",
+      "acceptanceCriteria": [
+        "On desktop breakpoints, the Call History panel renders in the area where the Number Board previously rendered, and the Number Board renders in the area where the Call History panel previously rendered.",
+        "On mobile breakpoints, the relative order/placement of Call History vs Number Board is swapped compared to the current implementation (i.e., the same swap applies responsively, not only on desktop).",
+        "No gameplay logic changes: called numbers, undo behavior, auto-draw behavior, and persistence remain unchanged.",
+        "The Call History list still displays most-recent-first (reverse chronological display) as it does currently.",
+        "No duplicate HistoryPanel instances are shown at the same breakpoint (e.g., avoid rendering both the lg:hidden and lg:block versions simultaneously after the layout change)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Update the JSX layout so HistoryPanel occupies the previous NumberBoard container (the lg:col-span-2 area within the grid), and move NumberBoard to the previous HistoryPanel container (the section below the grid). Remove the breakpoint-split duplicate HistoryPanel rendering (lg:hidden / lg:block) to ensure only a single HistoryPanel instance is rendered at any breakpoint, and keep existing props wiring to preserve current gameplay behavior and reverse-chronological history display."
+        }
+      ]
+    }
+  ]
+}
