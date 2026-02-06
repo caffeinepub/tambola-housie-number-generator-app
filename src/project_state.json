@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 9,
+  "projectStateVersion": 11,
   "summary": "Create a Tambola (Housie) number generator app.",
   "architectural_notes": [
     "Reset/New Game actions should prompt a Yes/No confirmation modal to prevent accidental game state loss."
@@ -95,6 +95,38 @@
         "REQ-11"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-move-the-new-game-control-to-appear-above-the-last-number-display-in-the-main-gameplay-ui-while-preserving-the-existing-yes-no-confirmation-behavior-before-starting-a-new-game",
+      "title": "Move the “New Game” control to appear above the “Last Number” display in the main gameplay UI, while preserving the existing Yes/No confirmation behavior before starting a new game.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-reduce-the-visual-size-of-the-last-number-display-box-including-the-card-padding-and-the-circular-number-display-while-keeping-it-responsive-and-readable-on-mobile-and-desktop",
+      "title": "Reduce the visual size of the “Last Number” display box, including the card padding and the circular number display, while keeping it responsive and readable on mobile and desktop.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-rename-the-primary-draw-button-label-from-draw-next-to-draw-number-everywhere-it-appears-in-the-ui",
+      "title": "Rename the primary draw button label from “Draw Next” to “Draw Number” everywhere it appears in the UI.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-reposition-the-undo-control-so-it-appears-after-below-the-number-board-area-i-e-rendered-beneath-the-number-grid-and-remove-the-old-undo-placement-from-the-controls-card",
+      "title": "Reposition the “Undo” control so it appears after/below the Number Board area (i.e., rendered beneath the number grid), and remove the old “Undo” placement from the controls card.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -119,6 +151,30 @@
     {
       "id": "AR-4",
       "summary": "Add a Quick Reset button and show confirmation popups for both Reset and New Game actions (Yes/No)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Move the \"New Game\" control above the \"Last Number\" display (place New Game at the top, then the last number box)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Reduce the size of the \"Last Number\" display box",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Rename the \"Draw Next\" button to \"Draw Number\"",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Reposition the \"Undo\" control to appear after/below the number board",
       "reqIds": [],
       "status": "pending"
     }

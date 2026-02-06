@@ -1,9 +1,11 @@
 import { useTambolaGame } from './features/tambola/useTambolaGame';
+import { NewGameControl } from './features/tambola/components/NewGameControl';
 import { LastNumberDisplay } from './features/tambola/components/LastNumberDisplay';
 import { NumberBoard } from './features/tambola/components/NumberBoard';
 import { HistoryPanel } from './features/tambola/components/HistoryPanel';
 import { GameControls } from './features/tambola/components/GameControls';
-import { Heart } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Heart, Undo2 } from 'lucide-react';
 
 function App() {
   const {
@@ -45,22 +47,20 @@ function App() {
       {/* Main content */}
       <main className="container mx-auto px-4 py-6 sm:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left column - Last number and controls */}
-          <div className="space-y-6">
+          {/* Left column - New Game, Last number and controls */}
+          <div className="space-y-4">
+            <NewGameControl onNewGame={newGame} />
             <LastNumberDisplay
               lastDrawn={gameState.lastDrawn}
               isComplete={gameState.isComplete}
             />
             <GameControls
               canDraw={canDraw}
-              canUndo={canUndo}
               isComplete={gameState.isComplete}
               autoDrawEnabled={autoDrawSettings.enabled}
               autoDrawInterval={autoDrawSettings.intervalSeconds}
               onDrawNext={drawNext}
-              onUndo={undoLastDraw}
               onQuickReset={quickReset}
-              onNewGame={newGame}
               onAutoDrawToggle={setAutoDrawEnabled}
               onIntervalChange={setAutoDrawInterval}
             />
@@ -75,6 +75,20 @@ function App() {
         {/* Number board - below grid */}
         <div className="mt-6">
           <NumberBoard calledNumbers={gameState.calledNumbers} />
+        </div>
+
+        {/* Undo button - below number board */}
+        <div className="mt-4 flex justify-center">
+          <Button
+            onClick={undoLastDraw}
+            disabled={!canUndo || autoDrawSettings.enabled}
+            variant="outline"
+            size="lg"
+            className="min-w-[200px]"
+          >
+            <Undo2 className="mr-2 h-5 w-5" />
+            Undo
+          </Button>
         </div>
       </main>
 

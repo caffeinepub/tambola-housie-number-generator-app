@@ -14,54 +14,38 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Play, Pause, SkipForward, RotateCcw, Undo2, RefreshCw } from 'lucide-react';
+import { Play, Pause, SkipForward, RefreshCw } from 'lucide-react';
 
 interface GameControlsProps {
   canDraw: boolean;
-  canUndo: boolean;
   isComplete: boolean;
   autoDrawEnabled: boolean;
   autoDrawInterval: number;
   onDrawNext: () => void;
-  onUndo: () => void;
   onQuickReset: () => void;
-  onNewGame: () => void;
   onAutoDrawToggle: (enabled: boolean) => void;
   onIntervalChange: (interval: number) => void;
 }
 
 export function GameControls({
   canDraw,
-  canUndo,
   isComplete,
   autoDrawEnabled,
   autoDrawInterval,
   onDrawNext,
-  onUndo,
   onQuickReset,
-  onNewGame,
   onAutoDrawToggle,
   onIntervalChange,
 }: GameControlsProps) {
   const [quickResetDialogOpen, setQuickResetDialogOpen] = useState(false);
-  const [newGameDialogOpen, setNewGameDialogOpen] = useState(false);
 
   const handleQuickResetClick = () => {
     setQuickResetDialogOpen(true);
   };
 
-  const handleNewGameClick = () => {
-    setNewGameDialogOpen(true);
-  };
-
   const handleQuickResetConfirm = () => {
     onQuickReset();
     setQuickResetDialogOpen(false);
-  };
-
-  const handleNewGameConfirm = () => {
-    onNewGame();
-    setNewGameDialogOpen(false);
   };
 
   return (
@@ -77,22 +61,8 @@ export function GameControls({
               className="flex-1 min-w-[140px] bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-semibold shadow-lg"
             >
               <SkipForward className="mr-2 h-5 w-5" />
-              Draw Next
+              Draw Number
             </Button>
-            <Button
-              onClick={onUndo}
-              disabled={!canUndo || autoDrawEnabled}
-              variant="outline"
-              size="lg"
-              className="flex-1 min-w-[140px]"
-            >
-              <Undo2 className="mr-2 h-5 w-5" />
-              Undo
-            </Button>
-          </div>
-
-          {/* Reset buttons row */}
-          <div className="flex flex-wrap gap-3">
             <Button
               onClick={handleQuickResetClick}
               variant="outline"
@@ -101,15 +71,6 @@ export function GameControls({
             >
               <RefreshCw className="mr-2 h-5 w-5" />
               Quick Reset
-            </Button>
-            <Button
-              onClick={handleNewGameClick}
-              variant="destructive"
-              size="lg"
-              className="flex-1 min-w-[140px]"
-            >
-              <RotateCcw className="mr-2 h-5 w-5" />
-              New Game
             </Button>
           </div>
 
@@ -168,22 +129,6 @@ export function GameControls({
           <AlertDialogFooter>
             <AlertDialogCancel>No</AlertDialogCancel>
             <AlertDialogAction onClick={handleQuickResetConfirm}>Yes</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* New Game Confirmation Dialog */}
-      <AlertDialog open={newGameDialogOpen} onOpenChange={setNewGameDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>New Game</AlertDialogTitle>
-            <AlertDialogDescription>
-              Do you want to start a new game?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>No</AlertDialogCancel>
-            <AlertDialogAction onClick={handleNewGameConfirm}>Yes</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

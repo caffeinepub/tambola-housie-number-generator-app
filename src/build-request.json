@@ -1,87 +1,90 @@
 {
   "kind": "build_request",
-  "title": "Add Quick Reset button and confirmation popups for Reset/New Game actions",
+  "title": "Reorder controls, resize last-number display, rename draw button, and move Undo below board",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-9",
-      "text": "Add a new \"Quick Reset\" control to the gameplay controls area alongside existing buttons.",
+      "id": "REQ-12",
+      "text": "Move the “New Game” control to appear above the “Last Number” display in the main gameplay UI, while preserving the existing Yes/No confirmation behavior before starting a new game.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-messages"
+          "msg-4"
         ],
         "quotes": [
-          "Yes add quick reset button"
+          "New game on the top than last number box"
         ]
       },
       "acceptanceCriteria": [
-        "Game controls UI includes a distinct button labeled \"Quick Reset\".",
-        "The button is visible and usable on both mobile and desktop layouts without breaking the existing responsive layout."
+        "In the main gameplay screen, a “New Game” button is rendered above the Last Number display card.",
+        "Clicking “New Game” opens the existing confirmation dialog flow (Yes/No) and only starts a new game when “Yes” is confirmed.",
+        "The previous “New Game” placement within the controls area is removed so the UI contains a single clear “New Game” entry point."
       ]
     },
     {
-      "id": "REQ-10",
-      "text": "Show a confirmation popup (Yes/No) whenever the user triggers either Quick Reset or New Game, and only proceed with the action when the user confirms \"Yes\".",
+      "id": "REQ-13",
+      "text": "Reduce the visual size of the “Last Number” display box, including the card padding and the circular number display, while keeping it responsive and readable on mobile and desktop.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-messages"
+          "msg-4"
         ],
         "quotes": [
-          "but every time if some one click on reset or new game a popup should display do u want to reset yes/no or do you want to start new game yes/no"
+          "reduce the size of the box last number"
         ]
       },
       "acceptanceCriteria": [
-        "Clicking \"Quick Reset\" opens a modal/popup confirmation with English text asking: \"Do you want to reset?\" and buttons \"Yes\" and \"No\".",
-        "Clicking \"New Game\" opens a modal/popup confirmation with English text asking: \"Do you want to start a new game?\" and buttons \"Yes\" and \"No\".",
-        "Choosing \"No\" closes the popup and does not change the game state.",
-        "Choosing \"Yes\" closes the popup and performs the requested action.",
-        "The confirmation UI is implemented using existing frontend UI components (e.g., shadcn dialog/alert-dialog) without editing any files under frontend/src/components/ui."
+        "The Last Number card uses smaller padding than the current design and occupies less vertical space in the left column.",
+        "The circular last-number element (and its placeholder state) is smaller than before, with appropriately reduced font sizing to match.",
+        "The component remains visually centered and does not overflow or clip at common mobile widths."
       ]
     },
     {
-      "id": "REQ-11",
-      "text": "Implement distinct handlers for Quick Reset vs New Game so that: (a) Quick Reset resets the game numbers state (called numbers, remaining pool, last drawn, completion) and stops auto-draw if running, while preserving the current auto-draw interval setting; (b) New Game performs a full reset including returning auto-draw settings (enabled + interval) to their defaults.",
+      "id": "REQ-14",
+      "text": "Rename the primary draw button label from “Draw Next” to “Draw Number” everywhere it appears in the UI.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-messages"
+          "msg-4"
         ],
         "quotes": [
-          "reset or new game"
+          "rename draw next to draw number"
         ]
       },
       "acceptanceCriteria": [
-        "After confirming \"Quick Reset\": the game returns to an initial numbers state (no called numbers, full pool, no last drawn, not complete).",
-        "After confirming \"Quick Reset\": auto-draw is not running (auto-draw enabled is false), and the interval value displayed remains the same as before the reset.",
-        "After confirming \"New Game\": the game returns to an initial numbers state and auto-draw settings return to the default values used on first load.",
-        "After either action: persisted browser state reflects the updated state and remains consistent after a page refresh."
+        "The button previously labeled “Draw Next” is labeled “Draw Number”.",
+        "No other user-facing text still shows “Draw Next”."
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "text": "Reposition the “Undo” control so it appears after/below the Number Board area (i.e., rendered beneath the number grid), and remove the old “Undo” placement from the controls card.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "and undo after the number board"
+        ]
+      },
+      "acceptanceCriteria": [
+        "An “Undo” button is displayed below the Number Board component on the gameplay screen.",
+        "The Undo button keeps the same enabled/disabled behavior as before (disabled when undo is not allowed and/or when auto-draw is enabled).",
+        "The Undo button no longer appears in the main controls card area."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/components/ui (compose existing shadcn components instead).",
-    "Backend must remain single-actor; no backend changes are required for this request."
+    "Frontend user-facing text must be in English.",
+    "Do not modify files under frontend/src/components/ui or other immutable paths listed in SYSTEM_CONTEXT."
   ],
   "nonGoals": [
-    "Adding new authentication flows or backend persistence.",
-    "Changing the existing number drawing, undo logic, or board/history layout beyond adding the requested button and confirmation dialogs."
+    "No changes to Tambola draw/undo/reset game logic beyond UI placement and labels.",
+    "No backend (Motoko) changes."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [
-      "Use English for any user-facing text."
-    ],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

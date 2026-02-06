@@ -1,46 +1,55 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T04:06:58.922Z",
+  "generatedAt": "2026-02-06T04:16:47.262Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 3,
+    "total": 4,
+    "implemented": 4,
     "items": [
       {
-        "id": "REQ-10",
-        "summary": "Show a confirmation popup (Yes/No) whenever the user triggers either Quick Reset or New Game, and only proceed with the action when the user confirms \"Yes\".",
+        "id": "REQ-12",
+        "summary": "Move the “New Game” control to appear above the “Last Number” display in the main gameplay UI, while preserving the existing Yes/No confirmation behavior before starting a new game.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/tambola/components/GameControls.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/features/tambola/components/NewGameControl.tsx",
+          "frontend/src/App.tsx",
+          "frontend/src/features/tambola/components/GameControls.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/tambola/components/GameControls.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/features/tambola/components/NewGameControl.tsx",
+          "frontend/src/App.tsx",
+          "frontend/src/features/tambola/components/GameControls.tsx"
         ]
       },
       {
-        "id": "REQ-11",
-        "summary": "Implement distinct handlers for Quick Reset vs New Game so that: (a) Quick Reset resets the game numbers state (called numbers, remaining pool, last drawn, completion) and stops auto-draw if running, while preserving the current auto-draw interval setting; (b) New Game performs a full reset including returning auto-draw settings (enabled + interval) to their defaults.",
+        "id": "REQ-13",
+        "summary": "Reduce the visual size of the “Last Number” display box, including the card padding and the circular number display, while keeping it responsive and readable on mobile and desktop.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/tambola/useTambolaGame.ts",
-          "frontend/src/App.tsx",
-          "frontend/src/features/tambola/storage.ts"
+          "frontend/src/features/tambola/components/LastNumberDisplay.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/tambola/useTambolaGame.ts",
-          "frontend/src/App.tsx",
-          "frontend/src/features/tambola/storage.ts"
+          "frontend/src/features/tambola/components/LastNumberDisplay.tsx"
         ]
       },
       {
-        "id": "REQ-9",
-        "summary": "Add a new \"Quick Reset\" control to the gameplay controls area alongside existing buttons.",
+        "id": "REQ-14",
+        "summary": "Rename the primary draw button label from “Draw Next” to “Draw Number” everywhere it appears in the UI.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/tambola/components/GameControls.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/tambola/components/GameControls.tsx"
+        ]
+      },
+      {
+        "id": "REQ-15",
+        "summary": "Reposition the “Undo” control so it appears after/below the Number Board area (i.e., rendered beneath the number grid), and remove the old “Undo” placement from the controls card.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/features/tambola/components/GameControls.tsx",
@@ -60,8 +69,8 @@
     "frontend-implementation-plan.json",
     "frontend/src/App.tsx",
     "frontend/src/features/tambola/components/GameControls.tsx",
-    "frontend/src/features/tambola/storage.ts",
-    "frontend/src/features/tambola/useTambolaGame.ts",
+    "frontend/src/features/tambola/components/LastNumberDisplay.tsx",
+    "frontend/src/features/tambola/components/NewGameControl.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

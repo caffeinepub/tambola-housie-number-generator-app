@@ -2,8 +2,64 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-new-quick-reset-control-to-the-gameplay-controls-area-alongside-existing-buttons",
-      "featureTitle": "Add a new \"Quick Reset\" control to the gameplay controls area alongside existing buttons.",
+      "featureId": "feature-move-the-new-game-control-to-appear-above-the-last-number-display-in-the-main-gameplay-ui-while-preserving-the-existing-yes-no-confirmation-behavior-before-starting-a-new-game",
+      "featureTitle": "Move the “New Game” control to appear above the “Last Number” display in the main gameplay UI, while preserving the existing Yes/No confirmation behavior before starting a new game.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/features/tambola/components/GameControls.tsx",
+        "frontend/src/features/tambola/components/NewGameControl.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-12"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-reduce-the-visual-size-of-the-last-number-display-box-including-the-card-padding-and-the-circular-number-display-while-keeping-it-responsive-and-readable-on-mobile-and-desktop",
+      "featureTitle": "Reduce the visual size of the “Last Number” display box, including the card padding and the circular number display, while keeping it responsive and readable on mobile and desktop.",
+      "files": [
+        "frontend/src/features/tambola/components/LastNumberDisplay.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-13"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-rename-the-primary-draw-button-label-from-draw-next-to-draw-number-everywhere-it-appears-in-the-ui",
+      "featureTitle": "Rename the primary draw button label from “Draw Next” to “Draw Number” everywhere it appears in the UI.",
+      "files": [
+        "frontend/src/features/tambola/components/GameControls.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-14"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-reposition-the-undo-control-so-it-appears-after-below-the-number-board-area-i-e-rendered-beneath-the-number-grid-and-remove-the-old-undo-placement-from-the-controls-card",
+      "featureTitle": "Reposition the “Undo” control so it appears after/below the Number Board area (i.e., rendered beneath the number grid), and remove the old “Undo” placement from the controls card.",
       "files": [
         "frontend/src/App.tsx",
         "frontend/src/features/tambola/components/GameControls.tsx"
@@ -16,46 +72,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-9"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-show-a-confirmation-popup-yes-no-whenever-the-user-triggers-either-quick-reset-or-new-game-and-only-proceed-with-the-action-when-the-user-confirms-yes",
-      "featureTitle": "Show a confirmation popup (Yes/No) whenever the user triggers either Quick Reset or New Game, and only proceed with the action when the user confirms \"Yes\".",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/features/tambola/components/GameControls.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-10"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-distinct-handlers-for-quick-reset-vs-new-game-so-that-a-quick-reset-resets-the-game-numbers-state-called-numbers-remaining-pool-last-drawn-completion-and-stops-auto-draw-if-running-while-preserving-the-current-auto-draw-interval-setting-b-new-game-performs-a-full-reset-including-returning-auto-draw-settings-enabled-interval-to-their-defaults",
-      "featureTitle": "Implement distinct handlers for Quick Reset vs New Game so that: (a) Quick Reset resets the game numbers state (called numbers, remaining pool, last drawn, completion) and stops auto-draw if running, while preserving the current auto-draw interval setting; (b) New Game performs a full reset including returning auto-draw settings (enabled + interval) to their defaults.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/features/tambola/storage.ts",
-        "frontend/src/features/tambola/useTambolaGame.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-11"
+        "REQ-15"
       ],
       "confidence": "high"
     }
