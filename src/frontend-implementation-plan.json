@@ -1,23 +1,75 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Swap Number Board and Call History panel positions in responsive gameplay layout",
+  "title": "Quick Reset button with confirmation dialogs and distinct reset behaviors",
   "requirements": [
     {
-      "id": "REQ-8",
-      "summary": "Swap the rendered positions of the NumberBoard and HistoryPanel in the main gameplay layout for both mobile and desktop without changing gameplay logic.",
+      "id": "REQ-9",
+      "summary": "Add a distinct \"Quick Reset\" button to the existing gameplay controls area without breaking responsive layout.",
       "acceptanceCriteria": [
-        "On desktop breakpoints, the Call History panel renders in the area where the Number Board previously rendered, and the Number Board renders in the area where the Call History panel previously rendered.",
-        "On mobile breakpoints, the relative order/placement of Call History vs Number Board is swapped compared to the current implementation (i.e., the same swap applies responsively, not only on desktop).",
-        "No gameplay logic changes: called numbers, undo behavior, auto-draw behavior, and persistence remain unchanged.",
-        "The Call History list still displays most-recent-first (reverse chronological display) as it does currently.",
-        "No duplicate HistoryPanel instances are shown at the same breakpoint (e.g., avoid rendering both the lg:hidden and lg:block versions simultaneously after the layout change)."
+        "Game controls UI includes a distinct button labeled \"Quick Reset\".",
+        "The button is visible and usable on both mobile and desktop layouts without breaking the existing responsive layout."
       ],
       "file_operations": [
         {
+          "path": "frontend/src/features/tambola/components/GameControls.tsx",
+          "operation": "modify",
+          "description": "Add a new control button labeled \"Quick Reset\" alongside the existing buttons in the controls row, matching the current flex-wrap responsive layout and disabled-state conventions as appropriate."
+        },
+        {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update the JSX layout so HistoryPanel occupies the previous NumberBoard container (the lg:col-span-2 area within the grid), and move NumberBoard to the previous HistoryPanel container (the section below the grid). Remove the breakpoint-split duplicate HistoryPanel rendering (lg:hidden / lg:block) to ensure only a single HistoryPanel instance is rendered at any breakpoint, and keep existing props wiring to preserve current gameplay behavior and reverse-chronological history display."
+          "description": "Wire the new Quick Reset control by passing a dedicated onQuickReset handler into GameControls so the button is functional and not orphaned."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Add Yes/No confirmation popups for Quick Reset and New Game actions using existing shadcn dialog components (without editing ui components).",
+      "acceptanceCriteria": [
+        "Clicking \"Quick Reset\" opens a modal/popup confirmation with English text asking: \"Do you want to reset?\" and buttons \"Yes\" and \"No\".",
+        "Clicking \"New Game\" opens a modal/popup confirmation with English text asking: \"Do you want to start a new game?\" and buttons \"Yes\" and \"No\".",
+        "Choosing \"No\" closes the popup and does not change the game state.",
+        "Choosing \"Yes\" closes the popup and performs the requested action.",
+        "The confirmation UI is implemented using existing frontend UI components (e.g., shadcn dialog/alert-dialog) without editing any files under frontend/src/components/ui."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/tambola/components/GameControls.tsx",
+          "operation": "modify",
+          "description": "Wrap the Quick Reset and New Game button clicks with confirmation UI using existing shadcn-ui AlertDialog (compose imports from the existing ui library; do not edit any files under frontend/src/components/ui). Ensure the dialog copy is exactly: \"Do you want to reset?\" for Quick Reset and \"Do you want to start a new game?\" for New Game, with \"Yes\" and \"No\" actions. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Update GameControls props/wiring so confirmation \"Yes\" actions call the correct handler (quick reset vs new game) and \"No\" only closes the dialog without mutating state."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Implement separate Quick Reset vs New Game handlers with correct auto-draw behavior and persistence.",
+      "acceptanceCriteria": [
+        "After confirming \"Quick Reset\": the game returns to an initial numbers state (no called numbers, full pool, no last drawn, not complete).",
+        "After confirming \"Quick Reset\": auto-draw is not running (auto-draw enabled is false), and the interval value displayed remains the same as before the reset.",
+        "After confirming \"New Game\": the game returns to an initial numbers state and auto-draw settings return to the default values used on first load.",
+        "After either action: persisted browser state reflects the updated state and remains consistent after a page refresh."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/tambola/useTambolaGame.ts",
+          "operation": "modify",
+          "description": "Refactor reset logic into two distinct handlers: (1) quickReset that resets only the numbers-related game state and stops any running auto-draw while preserving the current intervalSeconds value; (2) newGame that resets both numbers state and auto-draw settings back to their initial defaults. Ensure any active auto-draw timer is stopped appropriately in both cases and that persistence remains consistent via the existing save mechanism."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Consume and wire the two distinct hook handlers (quick reset vs new game) into GameControls so each confirmation dialog triggers the correct behavior and the UI reflects the preserved vs default interval requirement after reset."
+        },
+        {
+          "path": "frontend/src/features/tambola/storage.ts",
+          "operation": "modify",
+          "description": "Adjust/reset helpers usage as needed to ensure the persisted localStorage state matches the post-action in-memory state for both quick reset and new game (avoid leaving stale cleared/partial state after refresh)."
         }
       ]
     }

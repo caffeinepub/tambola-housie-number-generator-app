@@ -2,10 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-main-gameplay-layout-to-swap-the-on-screen-positions-of-the-number-board-and-the-call-history-panel-keeping-the-layout-responsive-for-mobile-and-desktop",
-      "featureTitle": "Update the main gameplay layout to swap the on-screen positions of the Number Board and the Call History panel, keeping the layout responsive for mobile and desktop.",
+      "featureId": "feature-add-a-new-quick-reset-control-to-the-gameplay-controls-area-alongside-existing-buttons",
+      "featureTitle": "Add a new \"Quick Reset\" control to the gameplay controls area alongside existing buttons.",
       "files": [
-        "frontend/src/App.tsx"
+        "frontend/src/App.tsx",
+        "frontend/src/features/tambola/components/GameControls.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -15,7 +16,46 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-8"
+        "REQ-9"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-show-a-confirmation-popup-yes-no-whenever-the-user-triggers-either-quick-reset-or-new-game-and-only-proceed-with-the-action-when-the-user-confirms-yes",
+      "featureTitle": "Show a confirmation popup (Yes/No) whenever the user triggers either Quick Reset or New Game, and only proceed with the action when the user confirms \"Yes\".",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/features/tambola/components/GameControls.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-10"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-distinct-handlers-for-quick-reset-vs-new-game-so-that-a-quick-reset-resets-the-game-numbers-state-called-numbers-remaining-pool-last-drawn-completion-and-stops-auto-draw-if-running-while-preserving-the-current-auto-draw-interval-setting-b-new-game-performs-a-full-reset-including-returning-auto-draw-settings-enabled-interval-to-their-defaults",
+      "featureTitle": "Implement distinct handlers for Quick Reset vs New Game so that: (a) Quick Reset resets the game numbers state (called numbers, remaining pool, last drawn, completion) and stops auto-draw if running, while preserving the current auto-draw interval setting; (b) New Game performs a full reset including returning auto-draw settings (enabled + interval) to their defaults.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/features/tambola/storage.ts",
+        "frontend/src/features/tambola/useTambolaGame.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-11"
       ],
       "confidence": "high"
     }

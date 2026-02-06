@@ -33,14 +33,6 @@ export function savePersistedState(state: PersistedState): void {
   }
 }
 
-export function clearPersistedState(): void {
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-  } catch (error) {
-    console.error('Failed to clear state:', error);
-  }
-}
-
 export function createInitialGameState(): TambolaGameState {
   const pool = Array.from({ length: 90 }, (_, i) => i + 1);
   return {

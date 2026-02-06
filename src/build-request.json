@@ -1,40 +1,87 @@
 {
   "kind": "build_request",
-  "title": "Swap the UI positions of the Number Board and Call History panels",
+  "title": "Add Quick Reset button and confirmation popups for Reset/New Game actions",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-8",
-      "text": "Update the main gameplay layout to swap the on-screen positions of the Number Board and the Call History panel, keeping the layout responsive for mobile and desktop.",
+      "id": "REQ-9",
+      "text": "Add a new \"Quick Reset\" control to the gameplay controls area alongside existing buttons.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "recent-messages"
         ],
         "quotes": [
-          "Change the position of number board and call history"
+          "Yes add quick reset button"
         ]
       },
       "acceptanceCriteria": [
-        "On desktop breakpoints, the Call History panel renders in the area where the Number Board previously rendered, and the Number Board renders in the area where the Call History panel previously rendered.",
-        "On mobile breakpoints, the relative order/placement of Call History vs Number Board is swapped compared to the current implementation (i.e., the same swap applies responsively, not only on desktop).",
-        "No gameplay logic changes: called numbers, undo behavior, auto-draw behavior, and persistence remain unchanged.",
-        "The Call History list still displays most-recent-first (reverse chronological display) as it does currently.",
-        "No duplicate HistoryPanel instances are shown at the same breakpoint (e.g., avoid rendering both the lg:hidden and lg:block versions simultaneously after the layout change)."
+        "Game controls UI includes a distinct button labeled \"Quick Reset\".",
+        "The button is visible and usable on both mobile and desktop layouts without breaking the existing responsive layout."
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Show a confirmation popup (Yes/No) whenever the user triggers either Quick Reset or New Game, and only proceed with the action when the user confirms \"Yes\".",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "recent-messages"
+        ],
+        "quotes": [
+          "but every time if some one click on reset or new game a popup should display do u want to reset yes/no or do you want to start new game yes/no"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Clicking \"Quick Reset\" opens a modal/popup confirmation with English text asking: \"Do you want to reset?\" and buttons \"Yes\" and \"No\".",
+        "Clicking \"New Game\" opens a modal/popup confirmation with English text asking: \"Do you want to start a new game?\" and buttons \"Yes\" and \"No\".",
+        "Choosing \"No\" closes the popup and does not change the game state.",
+        "Choosing \"Yes\" closes the popup and performs the requested action.",
+        "The confirmation UI is implemented using existing frontend UI components (e.g., shadcn dialog/alert-dialog) without editing any files under frontend/src/components/ui."
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Implement distinct handlers for Quick Reset vs New Game so that: (a) Quick Reset resets the game numbers state (called numbers, remaining pool, last drawn, completion) and stops auto-draw if running, while preserving the current auto-draw interval setting; (b) New Game performs a full reset including returning auto-draw settings (enabled + interval) to their defaults.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "recent-messages"
+        ],
+        "quotes": [
+          "reset or new game"
+        ]
+      },
+      "acceptanceCriteria": [
+        "After confirming \"Quick Reset\": the game returns to an initial numbers state (no called numbers, full pool, no last drawn, not complete).",
+        "After confirming \"Quick Reset\": auto-draw is not running (auto-draw enabled is false), and the interval value displayed remains the same as before the reset.",
+        "After confirming \"New Game\": the game returns to an initial numbers state and auto-draw settings return to the default values used on first load.",
+        "After either action: persisted browser state reflects the updated state and remains consistent after a page refresh."
       ]
     }
   ],
   "constraints": [
-    "Frontend immutable paths must not be modified: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
-    "Keep backend as single-actor; no backend changes are required for this UI-only request."
+    "Do not edit files under frontend/src/components/ui (compose existing shadcn components instead).",
+    "Backend must remain single-actor; no backend changes are required for this request."
   ],
   "nonGoals": [
-    "Changing call-history sorting behavior beyond the existing most-recent-first display.",
-    "Changing Tambola game rules, randomization, undo/reset behavior, or localStorage persistence.",
-    "Adding new controls or new panels unrelated to swapping the positions of Number Board and Call History."
+    "Adding new authentication flows or backend persistence.",
+    "Changing the existing number drawing, undo logic, or board/history layout beyond adding the requested button and confirmation dialogs."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [
+      "Use English for any user-facing text."
+    ],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

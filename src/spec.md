@@ -1,11 +1,14 @@
 # Specification
 
 ## Summary
-**Goal:** Swap the on-screen positions of the Number Board and Call History panels in the main gameplay UI while keeping the layout responsive.
+**Goal:** Add a Quick Reset button and require confirmation dialogs for Quick Reset and New Game, with distinct reset behaviors.
 
 **Planned changes:**
-- Update the main gameplay layout so the Call History panel renders where the Number Board previously appeared, and the Number Board renders where the Call History previously appeared (desktop breakpoints).
-- Apply the same swapped ordering on mobile breakpoints (responsive swap, not desktop-only).
-- Ensure only one Call History panel instance is rendered per breakpoint (avoid duplicate responsive variants showing at once).
+- Add a new gameplay control button labeled “Quick Reset” alongside existing controls, ensuring it works in both mobile and desktop responsive layouts.
+- Add confirmation popups (Yes/No) for both “Quick Reset” and “New Game” with English prompts, and only execute the action on “Yes”.
+- Implement separate reset handlers:
+  - Quick Reset: reset numbers-related game state and stop auto-draw while preserving the current interval value.
+  - New Game: full reset including restoring auto-draw settings to their default values.
+- Ensure the updated state is persisted to browser storage and remains consistent after refresh.
 
-**User-visible outcome:** Players see the Number Board and Call History panels swapped in position on both desktop and mobile, with gameplay behavior and call history ordering unchanged.
+**User-visible outcome:** Players can tap “Quick Reset” or “New Game” and will see a Yes/No confirmation; confirming performs the appropriate reset, and canceling leaves the game unchanged.

@@ -11,7 +11,8 @@ function App() {
     autoDrawSettings,
     drawNext,
     undoLastDraw,
-    resetGame,
+    quickReset,
+    newGame,
     setAutoDrawEnabled,
     setAutoDrawInterval,
     canDraw,
@@ -58,7 +59,8 @@ function App() {
               autoDrawInterval={autoDrawSettings.intervalSeconds}
               onDrawNext={drawNext}
               onUndo={undoLastDraw}
-              onReset={resetGame}
+              onQuickReset={quickReset}
+              onNewGame={newGame}
               onAutoDrawToggle={setAutoDrawEnabled}
               onIntervalChange={setAutoDrawInterval}
             />

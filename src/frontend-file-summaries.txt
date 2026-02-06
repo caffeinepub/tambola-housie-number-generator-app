@@ -1,12 +1,12 @@
 {
   "frontend/src/features/tambola/types.ts": "TypeScript type definitions for Tambola game state (called numbers, remaining pool, completion status) and auto-draw settings.",
-  "frontend/src/features/tambola/storage.ts": "localStorage persistence helpers for saving/loading/clearing Tambola game state and auto-draw settings with validation.",
-  "frontend/src/features/tambola/useTambolaGame.ts": "Custom React hook managing complete Tambola game logic including draw, undo, reset, auto-draw timer, and localStorage persistence.",
+  "frontend/src/features/tambola/storage.ts": "localStorage persistence helpers for saving/loading Tambola game state and auto-draw settings with validation and initial state creation functions.",
+  "frontend/src/features/tambola/useTambolaGame.ts": "Custom React hook managing complete Tambola game logic with two distinct reset handlers (quickReset preserves interval settings, newGame resets everything), draw, undo, auto-draw timer, and localStorage persistence.",
   "frontend/src/features/tambola/components/LastNumberDisplay.tsx": "Prominent display component showing the most recently drawn number in a large circular badge with gradient styling.",
   "frontend/src/features/tambola/components/NumberBoard.tsx": "9x10 grid displaying all 90 Tambola numbers with visual distinction between called and uncalled numbers using color gradients.",
   "frontend/src/features/tambola/components/HistoryPanel.tsx": "Scrollable panel displaying all called numbers in reverse chronological order (most recent first) with count indicator, using a reversed copy for rendering while preserving original array order for game logic.",
-  "frontend/src/features/tambola/components/GameControls.tsx": "Control panel with Draw Next, Undo, Reset buttons plus auto-draw toggle and interval slider.",
-  "frontend/src/App.tsx": "Main application component orchestrating the Tambola game layout with header, number display, controls, call history (now in the lg:col-span-2 area), and number board (now below the grid) in a responsive layout.",
+  "frontend/src/features/tambola/components/GameControls.tsx": "Control panel with Draw Next, Undo, Quick Reset, and New Game buttons plus auto-draw toggle and interval slider, featuring AlertDialog confirmation popups for both reset actions.",
+  "frontend/src/App.tsx": "Main application component orchestrating the Tambola game layout with header, number display, controls (wired to both quickReset and newGame handlers), call history, and number board in a responsive layout.",
   "frontend/src/index.css": "Global styles with warm amber/orange OKLCH color palette for game-night theme and subtle background pattern overlay.",
   "frontend/tailwind.config.js": "Tailwind configuration with extended color tokens matching the warm game-night theme and custom font family.",
   "frontend/index.html": "HTML entry point with Tambola app title and favicon reference to generated icon asset."

@@ -1,8 +1,10 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
+  "projectStateVersion": 9,
   "summary": "Create a Tambola (Housie) number generator app.",
-  "architectural_notes": [],
+  "architectural_notes": [
+    "Reset/New Game actions should prompt a Yes/No confirmation modal to prevent accidental game state loss."
+  ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
@@ -69,6 +71,30 @@
         "REQ-8"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-a-new-quick-reset-control-to-the-gameplay-controls-area-alongside-existing-buttons",
+      "title": "Add a new \"Quick Reset\" control to the gameplay controls area alongside existing buttons.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-show-a-confirmation-popup-yes-no-whenever-the-user-triggers-either-quick-reset-or-new-game-and-only-proceed-with-the-action-when-the-user-confirms-yes",
+      "title": "Show a confirmation popup (Yes/No) whenever the user triggers either Quick Reset or New Game, and only proceed with the action when the user confirms \"Yes\".",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-distinct-handlers-for-quick-reset-vs-new-game-so-that-a-quick-reset-resets-the-game-numbers-state-called-numbers-remaining-pool-last-drawn-completion-and-stops-auto-draw-if-running-while-preserving-the-current-auto-draw-interval-setting-b-new-game-performs-a-full-reset-including-returning-auto-draw-settings-enabled-interval-to-their-defaults",
+      "title": "Implement distinct handlers for Quick Reset vs New Game so that: (a) Quick Reset resets the game numbers state (called numbers, remaining pool, last drawn, completion) and stops auto-draw if running, while preserving the current auto-draw interval setting; (b) New Game performs a full reset including returning auto-draw settings (enabled + interval) to their defaults.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -87,6 +113,12 @@
     {
       "id": "AR-3",
       "summary": "Change/swap the UI positions of the number board and the call history panel",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add a Quick Reset button and show confirmation popups for both Reset and New Game actions (Yes/No)",
       "reqIds": [],
       "status": "pending"
     }

@@ -3,7 +3,6 @@ import type { TambolaGameState, AutoDrawSettings } from './types';
 import {
   loadPersistedState,
   savePersistedState,
-  clearPersistedState,
   createInitialGameState,
   createInitialAutoDrawSettings,
 } from './storage';
@@ -60,16 +59,43 @@ export function useTambolaGame() {
     });
   }, [gameState.calledNumbers, gameState.remainingPool]);
 
-  // Reset/New game
-  const resetGame = useCallback(() => {
-    setGameState(createInitialGameState());
-    setAutoDrawSettings(createInitialAutoDrawSettings());
-    clearPersistedState();
+  // Stop any running auto-draw timer
+  const stopAutoDrawTimer = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
   }, []);
+
+  // Quick Reset - resets game state only, preserves interval setting
+  const quickReset = useCallback(() => {
+    setGameState(createInitialGameState());
+    setAutoDrawSettings((prev) => ({
+      ...prev,
+      enabled: false,
+    }));
+    stopAutoDrawTimer();
+    // Persist the new state
+    savePersistedState({
+      gameState: createInitialGameState(),
+      autoDrawSettings: {
+        enabled: false,
+        intervalSeconds: autoDrawSettings.intervalSeconds,
+      },
+    });
+  }, [autoDrawSettings.intervalSeconds, stopAutoDrawTimer]);
+
+  // New Game - resets everything to initial defaults
+  const newGame = useCallback(() => {
+    setGameState(createInitialGameState());
+    setAutoDrawSettings(createInitialAutoDrawSettings());
+    stopAutoDrawTimer();
+    // Persist the new state
+    savePersistedState({
+      gameState: createInitialGameState(),
+      autoDrawSettings: createInitialAutoDrawSettings(),
+    });
+  }, [stopAutoDrawTimer]);
 
   // Update auto-draw settings
   const setAutoDrawEnabled = useCallback((enabled: boolean) => {
@@ -113,7 +139,8 @@ export function useTambolaGame() {
     autoDrawSettings,
     drawNext,
     undoLastDraw,
-    resetGame,
+    quickReset,
+    newGame,
     setAutoDrawEnabled,
     setAutoDrawInterval,
     canDraw: gameState.remainingPool.length > 0,
