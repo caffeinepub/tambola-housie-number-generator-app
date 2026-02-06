@@ -4,9 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CheckCircle2, XCircle, Search, Mic, MicOff } from 'lucide-react';
-import { useSpeechRecognition } from '../voice/useSpeechRecognition';
-import { parseSpokenNumbers } from '../verify/parseSpokenNumbers';
+import { CheckCircle2, XCircle, Search } from 'lucide-react';
 
 interface VerifyCalledNumbersProps {
   calledNumbers: number[];
@@ -21,40 +19,11 @@ export function VerifyCalledNumbers({ calledNumbers }: VerifyCalledNumbersProps)
   const [inputs, setInputs] = useState<string[]>(Array(15).fill(''));
   const [result, setResult] = useState<VerificationResult>({ status: 'idle' });
   const isVerifyingRef = useRef(false);
-  
-  const {
-    isListening,
-    transcript,
-    error: speechError,
-    isSupported,
-    startListening,
-    stopListening,
-    resetTranscript,
-  } = useSpeechRecognition();
 
   // Clear result when calledNumbers changes
   useEffect(() => {
     setResult({ status: 'idle' });
   }, [calledNumbers]);
-
-  // Process transcript when recording stops
-  useEffect(() => {
-    if (!isListening && transcript) {
-      const spokenNumbers = parseSpokenNumbers(transcript);
-      
-      // Fill inputs with spoken numbers
-      const newInputs = Array(15).fill('');
-      spokenNumbers.forEach((num, idx) => {
-        if (idx < 15) {
-          newInputs[idx] = num.toString();
-        }
-      });
-      
-      setInputs(newInputs);
-      setResult({ status: 'idle' });
-      resetTranscript();
-    }
-  }, [isListening, transcript, resetTranscript]);
 
   const handleInputChange = (index: number, value: string) => {
     // Only allow numbers
@@ -117,21 +86,6 @@ export function VerifyCalledNumbers({ calledNumbers }: VerifyCalledNumbersProps)
     isVerifyingRef.current = false;
   };
 
-  const handleStartRecording = () => {
-    if (!isSupported) {
-      setResult({ 
-        status: 'error', 
-        message: 'Speech recognition is not supported in this browser. Please use manual entry.' 
-      });
-      return;
-    }
-    startListening();
-  };
-
-  const handleStopRecording = () => {
-    stopListening();
-  };
-
   return (
     <Card>
       <CardHeader>
@@ -139,58 +93,9 @@ export function VerifyCalledNumbers({ calledNumbers }: VerifyCalledNumbersProps)
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <Label className="text-sm text-muted-foreground">
-              Enter 1-15 numbers (positions 1-15)
-            </Label>
-            
-            {/* Voice Recording Control */}
-            {isSupported && (
-              <div className="flex gap-2">
-                {!isListening ? (
-                  <Button 
-                    onClick={handleStartRecording} 
-                    size="sm" 
-                    variant="outline"
-                    className="gap-2"
-                  >
-                    <Mic className="h-4 w-4" />
-                    Record
-                  </Button>
-                ) : (
-                  <Button 
-                    onClick={handleStopRecording} 
-                    size="sm" 
-                    variant="destructive"
-                    className="gap-2"
-                  >
-                    <MicOff className="h-4 w-4" />
-                    Stop
-                  </Button>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Listening indicator */}
-          {isListening && (
-            <Alert className="border-blue-500/50 bg-blue-500/10">
-              <Mic className="h-4 w-4 text-blue-600 animate-pulse" />
-              <AlertDescription className="text-blue-700 dark:text-blue-400">
-                Listening... Speak all numbers clearly.
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {/* Speech recognition error */}
-          {speechError && !isListening && (
-            <Alert className="border-orange-500/50 bg-orange-500/10">
-              <XCircle className="h-4 w-4 text-orange-600" />
-              <AlertDescription className="text-orange-700 dark:text-orange-400">
-                {speechError}
-              </AlertDescription>
-            </Alert>
-          )}
+          <Label className="text-sm text-muted-foreground">
+            Enter 1-15 numbers (positions 1-15)
+          </Label>
 
           {/* 15 Input Grid */}
           <div className="grid grid-cols-5 gap-2">

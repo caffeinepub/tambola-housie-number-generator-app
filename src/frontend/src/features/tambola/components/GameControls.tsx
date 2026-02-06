@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
@@ -38,6 +38,31 @@ export function GameControls({
   onIntervalChange,
 }: GameControlsProps) {
   const [quickResetDialogOpen, setQuickResetDialogOpen] = useState(false);
+  const [drawCooldown, setDrawCooldown] = useState(0);
+
+  // Handle draw button click with cooldown
+  const handleDrawClick = () => {
+    if (drawCooldown > 0) return;
+    onDrawNext();
+    setDrawCooldown(4); // 4 second cooldown
+  };
+
+  // Countdown timer for draw button cooldown
+  useEffect(() => {
+    if (drawCooldown > 0) {
+      const timer = setTimeout(() => {
+        setDrawCooldown((prev) => prev - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [drawCooldown]);
+
+  // Reset cooldown when game is reset or completed
+  useEffect(() => {
+    if (isComplete || !canDraw) {
+      setDrawCooldown(0);
+    }
+  }, [isComplete, canDraw]);
 
   const handleQuickResetClick = () => {
     setQuickResetDialogOpen(true);
@@ -46,7 +71,10 @@ export function GameControls({
   const handleQuickResetConfirm = () => {
     onQuickReset();
     setQuickResetDialogOpen(false);
+    setDrawCooldown(0); // Reset cooldown on quick reset
   };
+
+  const isDrawDisabled = !canDraw || autoDrawEnabled || drawCooldown > 0;
 
   return (
     <>
@@ -55,13 +83,13 @@ export function GameControls({
           {/* Main action buttons */}
           <div className="flex flex-wrap gap-3">
             <Button
-              onClick={onDrawNext}
-              disabled={!canDraw || autoDrawEnabled}
+              onClick={handleDrawClick}
+              disabled={isDrawDisabled}
               size="lg"
               className="flex-1 min-w-[140px] bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-semibold shadow-lg"
             >
               <SkipForward className="mr-2 h-5 w-5" />
-              Draw Number
+              {drawCooldown > 0 ? `Wait ${drawCooldown}s` : 'Draw Number'}
             </Button>
             <Button
               onClick={handleQuickResetClick}
@@ -104,7 +132,7 @@ export function GameControls({
               </div>
               <Slider
                 id="interval"
-                min={1}
+                min={4}
                 max={10}
                 step={1}
                 value={[autoDrawInterval]}

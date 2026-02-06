@@ -1,55 +1,36 @@
 {
   "kind": "build_request",
-  "title": "Add a recent/last draw number box above Call History",
+  "title": "Publish Draft Version 34",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add a new UI box above the existing \"Call History\" panel that displays the most recent/last drawn Tambola number, updating whenever a new number is drawn.",
+      "text": "Update the app’s published version identifier to Draft 34 by changing the single source of truth constants in frontend/src/release/liveVersion.ts so the UI reflects that Draft 34 is the currently published draft (and set LIVE_VERSION_DATE to the publish date in YYYY-MM-DD format).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3",
-          "msg-14"
+          "msg-4"
         ],
         "quotes": [
-          "Perfect now add a box above call history to show the recent / last draw number",
-          "Generate code"
+          "Yes now fine, publish draft version 34"
         ]
       },
       "acceptanceCriteria": [
-        "On all screen sizes, a clearly separated box/card is rendered above the Call History card in the left column (where HistoryPanel currently appears).",
-        "When at least one number has been called, the box displays the current last drawn number from the game state.",
-        "When no number has been called yet, the box displays a clear placeholder (e.g., \"--\" or \"No number drawn yet\").",
-        "The new UI does not introduce horizontal scrolling or layout overflow in the left column and remains responsive on mobile and desktop."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Wire the last/most recent drawn number into the History section by passing the needed state from the main game hook into the History UI (e.g., use gameState.lastDrawn and gameState.isComplete), reusing the existing LastNumberDisplay component where appropriate.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ],
-        "quotes": [
-          "add a box above call history to show the recent / last draw number"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The displayed value matches the latest drawn number shown/used elsewhere in the app state (no duplicate or separately stored value).",
-        "If the game is complete, the box reflects completion state consistently with the underlying game state (e.g., via isComplete).",
-        "No backend changes are required to support this display (purely derived from existing frontend game state)."
+        "frontend/src/release/liveVersion.ts exports LIVE_VERSION with the exact string value 'Draft 34'.",
+        "frontend/src/release/liveVersion.ts exports LIVE_VERSION_DATE as a YYYY-MM-DD string matching the Draft 34 publish date.",
+        "After building the frontend, any UI location that displays the live/draft version shows Draft 34 (no remaining Draft 32 references used for live version display)."
       ]
     }
   ],
   "constraints": [
-    "Do not perform or require any deployment/publishing actions; only generate code changes.",
-    "Do not edit files under frontend immutablePaths (e.g., frontend/src/hooks/useInternetIdentity.ts(x), frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui)."
+    "Do not modify any files under frontend/src/components/ui (read-only UI component sources).",
+    "Do not modify immutable hook files (frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx).",
+    "Backend must remain single-actor (no additional canisters/services)."
   ],
   "nonGoals": [
-    "Adding new backend storage or Motoko canister logic for tracking the last drawn number.",
-    "Changing unrelated layout areas (Number Board, Game Controls, Voice settings) beyond what is necessary to place the new box above Call History."
+    "Do not change TTS/voice behavior (English-only TTS is already approved as working).",
+    "Do not introduce new features beyond updating the published draft version identifier.",
+    "Do not change deployment tooling or add CI/CD automation."
   ],
   "imageRequirements": {
     "required": [],

@@ -1,4 +1,4 @@
-// Voice announcement controller with mixed playback step support (numeric and text)
+// Voice announcement controller with mixed playback step support (numeric and text) - English only
 
 import { useCallback, useRef } from 'react';
 import type { ReadingMode, VoiceSourcePriority, PlaybackStep } from './types';
@@ -27,8 +27,11 @@ export function useVoiceAnnouncements() {
         const steps: PlaybackStep[] = [];
 
         if (number >= 1 && number <= 9) {
-          // For single digits: always announce as "single number <N>"
-          steps.push({ text: `single number ${number}` });
+          // For single digits: split into two steps for English-only TTS
+          // Step 1: "single number" (text phrase)
+          steps.push({ text: 'single number' });
+          // Step 2: the digit itself (numeric)
+          steps.push(number);
         } else if (readingMode === 'digits-then-number') {
           // For multi-digit numbers in digits-then-number mode:
           // Split into individual digits, then say the full number
@@ -50,20 +53,20 @@ export function useVoiceAnnouncements() {
                 if (blob) {
                   await playAudioBlob(blob);
                 } else {
-                  // No recording, use TTS
+                  // No recording, use TTS (English-only)
                   await speakText(step.toString());
                 }
               } catch (error) {
-                // Recording playback failed, fallback to TTS
+                // Recording playback failed, fallback to TTS (English-only)
                 console.log(`Recording for ${step} failed, using TTS fallback`);
                 await speakText(step.toString());
               }
             } else {
-              // TTS first
+              // TTS first (English-only)
               await speakText(step.toString());
             }
           } else {
-            // Text phrase step: always use TTS
+            // Text phrase step: always use TTS (English-only)
             await speakText(step.text);
           }
         }

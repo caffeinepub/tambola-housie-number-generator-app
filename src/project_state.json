@@ -1,24 +1,16 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
+  "summary": "Project involves an English-only text-to-speech (TTS) update; user has approved Version 34 and requested publishing it as a draft.",
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-a-new-ui-box-above-the-existing-call-history-panel-that-displays-the-most-recent-last-drawn-tambola-number-updating-whenever-a-new-number-is-drawn",
-      "title": "Add a new UI box above the existing \"Call History\" panel that displays the most recent/last drawn Tambola number, updating whenever a new number is drawn.",
+      "id": "feature-update-the-app-s-published-version-identifier-to-draft-34-by-changing-the-single-source-of-truth-constants-in-frontend-src-release-liveversion-ts-so-the-ui-reflects-that-draft-34-is-the-currently-published-draft-and-set-live-version-date-to-the-publish-date-in-yyyy-mm-dd-format",
+      "title": "Update the app’s published version identifier to Draft 34 by changing the single source of truth constants in frontend/src/release/liveVersion.ts so the UI reflects that Draft 34 is the currently published draft (and set LIVE_VERSION_DATE to the publish date in YYYY-MM-DD format).",
       "reqIds": [
         "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-wire-the-last-most-recent-drawn-number-into-the-history-section-by-passing-the-needed-state-from-the-main-game-hook-into-the-history-ui-e-g-use-gamestate-lastdrawn-and-gamestate-iscomplete-reusing-the-existing-lastnumberdisplay-component-where-appropriate",
-      "title": "Wire the last/most recent drawn number into the History section by passing the needed state from the main game hook into the History UI (e.g., use gameState.lastDrawn and gameState.isComplete), reusing the existing LastNumberDisplay component where appropriate.",
-      "reqIds": [
-        "REQ-2"
       ],
       "version": 1
     }
@@ -26,12 +18,12 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add a box above Call History to display the most recent/last draw number",
+      "summary": "Publish draft release for Version 34 (includes updated English-only TTS)",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Add a recent/last draw number box above Call History",
+  "projectName": "Publish Draft Version 34",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

@@ -8,26 +8,10 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
-export const idlService = IDL.Service({
-  'addExternalText' : IDL.Func([IDL.Text], [], []),
-  'addPersistentCanister' : IDL.Func([IDL.Principal], [], []),
-  'addRemoteCanister' : IDL.Func([IDL.Principal], [], []),
-  'getExternalTexts' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
-  'getPersistentCanisters' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
-  'getRemoteCanisters' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
-});
+export const idlService = IDL.Service({});
 
 export const idlInitArgs = [];
 
-export const idlFactory = ({ IDL }) => {
-  return IDL.Service({
-    'addExternalText' : IDL.Func([IDL.Text], [], []),
-    'addPersistentCanister' : IDL.Func([IDL.Principal], [], []),
-    'addRemoteCanister' : IDL.Func([IDL.Principal], [], []),
-    'getExternalTexts' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
-    'getPersistentCanisters' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
-    'getRemoteCanisters' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
-  });
-};
+export const idlFactory = ({ IDL }) => { return IDL.Service({}); };
 
 export const init = ({ IDL }) => { return []; };

@@ -9,7 +9,8 @@ import { VerifyCalledNumbers } from './features/tambola/components/VerifyCalledN
 import { useTambolaGame } from './features/tambola/useTambolaGame';
 import { useVoiceSettings } from './features/tambola/voice/useVoiceSettings';
 import { useVoiceAnnouncements } from './features/tambola/voice/useVoiceAnnouncements';
-import { Dices } from 'lucide-react';
+import { LIVE_VERSION } from './release/liveVersion';
+import { Dices, Heart } from 'lucide-react';
 
 function App() {
   const {
@@ -62,7 +63,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header - Not sticky on mobile, sticky on sm+ */}
       <header className="border-b bg-card/50 backdrop-blur-sm sm:sticky sm:top-0 z-10">
         <div className="container mx-auto px-2 sm:px-4 py-3 sm:py-4">
@@ -84,7 +85,7 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-2 sm:px-4 py-6 sm:py-8 app-main-content">
+      <main className="container mx-auto px-2 sm:px-4 py-6 sm:py-8 app-main-content flex-1">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* History Section (Last Number + Call History) - order-1 on mobile, lg:order-1 on desktop (left column, top) */}
           <div className="order-1 lg:order-1">
@@ -133,6 +134,27 @@ function App() {
           </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t bg-card/30 backdrop-blur-sm mt-auto">
+        <div className="container mx-auto px-2 sm:px-4 py-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 text-sm text-muted-foreground">
+            <span>© 2026. Built with</span>
+            <Heart className="h-4 w-4 text-red-500 fill-red-500" />
+            <span>using</span>
+            <a
+              href="https://caffeine.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-primary hover:underline"
+            >
+              caffeine.ai
+            </a>
+            <span className="hidden sm:inline">•</span>
+            <span className="text-xs opacity-70">{LIVE_VERSION}</span>
+          </div>
+        </div>
+      </footer>
 
       {/* Voice Manager Dialog */}
       <HostVoiceManagerDialog

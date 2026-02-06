@@ -2,12 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-new-ui-box-above-the-existing-call-history-panel-that-displays-the-most-recent-last-drawn-tambola-number-updating-whenever-a-new-number-is-drawn",
-      "featureTitle": "Add a new UI box above the existing \"Call History\" panel that displays the most recent/last drawn Tambola number, updating whenever a new number is drawn.",
+      "featureId": "feature-update-the-app-s-published-version-identifier-to-draft-34-by-changing-the-single-source-of-truth-constants-in-frontend-src-release-liveversion-ts-so-the-ui-reflects-that-draft-34-is-the-currently-published-draft-and-set-live-version-date-to-the-publish-date-in-yyyy-mm-dd-format",
+      "featureTitle": "Update the app’s published version identifier to Draft 34 by changing the single source of truth constants in frontend/src/release/liveVersion.ts so the UI reflects that Draft 34 is the currently published draft (and set LIVE_VERSION_DATE to the publish date in YYYY-MM-DD format).",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/features/tambola/components/HistoryPanel.tsx",
-        "frontend/src/features/tambola/components/HistorySection.tsx"
+        "frontend/src/release/liveVersion.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -18,25 +16,6 @@
       ],
       "testIds": [
         "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-wire-the-last-most-recent-drawn-number-into-the-history-section-by-passing-the-needed-state-from-the-main-game-hook-into-the-history-ui-e-g-use-gamestate-lastdrawn-and-gamestate-iscomplete-reusing-the-existing-lastnumberdisplay-component-where-appropriate",
-      "featureTitle": "Wire the last/most recent drawn number into the History section by passing the needed state from the main game hook into the History UI (e.g., use gameState.lastDrawn and gameState.isComplete), reusing the existing LastNumberDisplay component where appropriate.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/features/tambola/components/HistorySection.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
       ],
       "confidence": "high"
     }

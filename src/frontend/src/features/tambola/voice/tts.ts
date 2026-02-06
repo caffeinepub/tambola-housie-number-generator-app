@@ -1,7 +1,8 @@
-// Browser SpeechSynthesis TTS helpers for fallback voice announcements
+// Browser SpeechSynthesis TTS helpers for fallback voice announcements - English only
 
 let voicesLoaded = false;
 let availableVoices: SpeechSynthesisVoice[] = [];
+let cachedEnglishVoice: SpeechSynthesisVoice | null = null;
 
 // Wait for voices to load (some browsers load them asynchronously)
 function ensureVoicesLoaded(): Promise<void> {
@@ -43,63 +44,42 @@ export function isTTSAvailable(): boolean {
   return typeof window !== 'undefined' && 'speechSynthesis' in window;
 }
 
-// Select best matching Indian female voice with match status
-function selectVoiceWithStatus(): { voice: SpeechSynthesisVoice | null; hasExactMatch: boolean } {
+// Select best English voice (prefer en-IN, then en-US, then any en-*)
+function selectEnglishVoice(): SpeechSynthesisVoice | null {
+  // Return cached voice if available
+  if (cachedEnglishVoice) {
+    return cachedEnglishVoice;
+  }
+
   if (availableVoices.length === 0) {
-    return { voice: null, hasExactMatch: false };
+    return null;
   }
 
-  // Step 1: Try to find Indian locale voices with female gender
-  let indianCandidates = availableVoices.filter(v => 
-    v.lang.startsWith('en-IN') || v.lang.startsWith('hi-IN') || v.lang.includes('-IN')
-  );
+  // Filter for English voices only
+  const englishVoices = availableVoices.filter(v => v.lang.startsWith('en'));
 
-  if (indianCandidates.length > 0) {
-    // Try to match female gender within Indian voices
-    const genderMatch = indianCandidates.find(v => {
-      const nameLower = v.name.toLowerCase();
-      return nameLower.includes('female') || 
-             nameLower.includes('woman') || 
-             nameLower.includes('nisha') || 
-             nameLower.includes('priya') ||
-             nameLower.includes('girl');
-    });
-
-    if (genderMatch) {
-      return { voice: genderMatch, hasExactMatch: true };
-    }
+  if (englishVoices.length === 0) {
+    // No English voices available, return null (will use lang hint)
+    return null;
   }
 
-  // Step 2: No Indian female voice - search ALL voices for female gender
-  const allFemaleMatches = availableVoices.filter(v => {
-    const nameLower = v.name.toLowerCase();
-    return nameLower.includes('female') || 
-           nameLower.includes('woman') || 
-           nameLower.includes('girl') ||
-           nameLower.includes('nisha') || 
-           nameLower.includes('priya') ||
-           nameLower.includes('samantha') ||
-           nameLower.includes('victoria') ||
-           nameLower.includes('karen');
-  });
-
-  if (allFemaleMatches.length > 0) {
-    // Prefer English voices among female matches
-    const englishFemaleMatch = allFemaleMatches.find(v => v.lang.startsWith('en'));
-    return { 
-      voice: englishFemaleMatch || allFemaleMatches[0], 
-      hasExactMatch: false 
-    };
+  // Priority 1: Indian English (en-IN)
+  const indianEnglish = englishVoices.find(v => v.lang.startsWith('en-IN'));
+  if (indianEnglish) {
+    cachedEnglishVoice = indianEnglish;
+    return indianEnglish;
   }
 
-  // Step 3: No female match found - fallback to Indian voice or first available
-  if (indianCandidates.length > 0) {
-    return { voice: indianCandidates[0], hasExactMatch: false };
+  // Priority 2: US English (en-US)
+  const usEnglish = englishVoices.find(v => v.lang.startsWith('en-US'));
+  if (usEnglish) {
+    cachedEnglishVoice = usEnglish;
+    return usEnglish;
   }
 
-  // Step 4: Final fallback - any English voice or first available
-  const englishVoice = availableVoices.find(v => v.lang.startsWith('en'));
-  return { voice: englishVoice || availableVoices[0], hasExactMatch: false };
+  // Priority 3: Any English voice
+  cachedEnglishVoice = englishVoices[0];
+  return englishVoices[0];
 }
 
 // Get voice match status for UI display
@@ -109,17 +89,15 @@ export async function getVoiceMatchStatus(): Promise<{ hasExactMatch: boolean; s
   }
 
   await ensureVoicesLoaded();
-  const { voice, hasExactMatch } = selectVoiceWithStatus();
+  const voice = selectEnglishVoice();
+  
+  // Consider it an exact match if we found an Indian English voice
+  const hasExactMatch = voice !== null && voice.lang.startsWith('en-IN');
+  
   return { hasExactMatch, selectedVoice: voice };
 }
 
-// Select best matching Indian female voice
-function selectVoice(): SpeechSynthesisVoice | null {
-  const { voice } = selectVoiceWithStatus();
-  return voice;
-}
-
-// Speak text using SpeechSynthesis
+// Speak text using SpeechSynthesis with English-only voice
 export async function speakText(text: string): Promise<void> {
   if (!isTTSAvailable()) {
     console.warn('SpeechSynthesis not supported');
@@ -135,13 +113,14 @@ export async function speakText(text: string): Promise<void> {
 
     const utterance = new SpeechSynthesisUtterance(text);
     
-    // Select voice
-    const voice = selectVoice();
+    // Select English voice
+    const voice = selectEnglishVoice();
     if (voice) {
       utterance.voice = voice;
       utterance.lang = voice.lang;
     } else {
-      // Fallback to default with Indian locale hint
+      // No English voice available - set English lang hint anyway
+      // Prefer en-IN, fallback to en-US
       utterance.lang = 'en-IN';
     }
 

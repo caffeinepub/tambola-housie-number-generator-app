@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Show the most recent/last drawn Tambola number in a dedicated box above the existing Call History panel.
+**Goal:** Update the app’s published draft version identifier to Draft 34 so the UI reflects the currently published draft.
 
 **Planned changes:**
-- Add a new responsive UI card/box above the Call History card in the left column to display the latest drawn number.
-- Bind the display to the existing frontend game state (e.g., `gameState.lastDrawn` and `gameState.isComplete`) and update it whenever a new number is drawn.
-- Reuse the existing `LastNumberDisplay` component where appropriate, and show a clear placeholder when no number has been drawn yet.
+- Update `frontend/src/release/liveVersion.ts` to export `LIVE_VERSION` as `Draft 34`.
+- Set `LIVE_VERSION_DATE` in `frontend/src/release/liveVersion.ts` to the Draft 34 publish date in `YYYY-MM-DD` format.
+- Verify any UI locations that display the live/draft version show Draft 34 (and no longer show Draft 32 as the live version).
 
-**User-visible outcome:** Players can always see the latest called Tambola number above Call History on both mobile and desktop, with a placeholder shown before any number is drawn.
+**User-visible outcome:** Anywhere the app displays the published/live draft version, it shows “Draft 34” (with the updated publish date).

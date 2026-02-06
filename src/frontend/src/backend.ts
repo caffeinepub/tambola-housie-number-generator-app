@@ -90,99 +90,9 @@ export class ExternalBlob {
     }
 }
 export interface backendInterface {
-    addExternalText(text: string): Promise<void>;
-    addPersistentCanister(id: Principal): Promise<void>;
-    addRemoteCanister(id: Principal): Promise<void>;
-    getExternalTexts(): Promise<Array<string>>;
-    getPersistentCanisters(): Promise<Array<string>>;
-    getRemoteCanisters(): Promise<Array<string>>;
 }
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
-    async addExternalText(arg0: string): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.addExternalText(arg0);
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.addExternalText(arg0);
-            return result;
-        }
-    }
-    async addPersistentCanister(arg0: Principal): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.addPersistentCanister(arg0);
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.addPersistentCanister(arg0);
-            return result;
-        }
-    }
-    async addRemoteCanister(arg0: Principal): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.addRemoteCanister(arg0);
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.addRemoteCanister(arg0);
-            return result;
-        }
-    }
-    async getExternalTexts(): Promise<Array<string>> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getExternalTexts();
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getExternalTexts();
-            return result;
-        }
-    }
-    async getPersistentCanisters(): Promise<Array<string>> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getPersistentCanisters();
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getPersistentCanisters();
-            return result;
-        }
-    }
-    async getRemoteCanisters(): Promise<Array<string>> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getRemoteCanisters();
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getRemoteCanisters();
-            return result;
-        }
-    }
 }
 export interface CreateActorOptions {
     agent?: Agent;

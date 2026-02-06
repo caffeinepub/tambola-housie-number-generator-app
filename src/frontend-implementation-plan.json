@@ -1,53 +1,21 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Recent/Last Drawn Number box above Call History",
+  "title": "Publish Draft Version 34",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Render a responsive, clearly separated box above the Call History card that shows the most recent drawn Tambola number (or a placeholder when none).",
+      "summary": "Update the single source of truth live version constants so the UI reflects Draft 34 as the currently published draft and shows the correct publish date.",
       "acceptanceCriteria": [
-        "On all screen sizes, a clearly separated box/card is rendered above the Call History card in the left column (where HistoryPanel currently appears).",
-        "When at least one number has been called, the box displays the current last drawn number from the game state.",
-        "When no number has been called yet, the box displays a clear placeholder (e.g., \"--\" or \"No number drawn yet\").",
-        "The new UI does not introduce horizontal scrolling or layout overflow in the left column and remains responsive on mobile and desktop."
+        "frontend/src/release/liveVersion.ts exports LIVE_VERSION with the exact string value 'Draft 34'.",
+        "frontend/src/release/liveVersion.ts exports LIVE_VERSION_DATE as a YYYY-MM-DD string matching the Draft 34 publish date.",
+        "After building the frontend, any UI location that displays the live/draft version shows Draft 34 (no remaining Draft 32 references used for live version display)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/features/tambola/components/HistorySection.tsx",
-          "operation": "create",
-          "description": "Create a left-column HistorySection wrapper that stacks a “recent/last drawn number” card above the existing Call History card; use the existing LastNumberDisplay component for the display (placeholder + completion messaging). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/release/liveVersion.ts",
           "operation": "modify",
-          "description": "Wire the new HistorySection into the left column in place of the direct HistoryPanel usage, ensuring it renders above Call History without layout overflow across breakpoints."
-        },
-        {
-          "path": "frontend/src/features/tambola/components/HistoryPanel.tsx",
-          "operation": "modify",
-          "description": "Adjust HistoryPanel layout to be stack-friendly (e.g., accept an optional className / remove hard h-full where needed and ensure internal ScrollArea can size without causing overflow when placed under the new box)."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Pass last drawn number and completion state from the main game hook into the History UI, reusing LastNumberDisplay so the value is derived from existing gameState.",
-      "acceptanceCriteria": [
-        "The displayed value matches the latest drawn number shown/used elsewhere in the app state (no duplicate or separately stored value).",
-        "If the game is complete, the box reflects completion state consistently with the underlying game state (e.g., via isComplete).",
-        "No backend changes are required to support this display (purely derived from existing frontend game state)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/features/tambola/components/HistorySection.tsx",
-          "operation": "create",
-          "description": "Implement props for calledNumbers, lastDrawn, and isComplete; pass lastDrawn/isComplete into LastNumberDisplay and calledNumbers into HistoryPanel so the display is purely derived from gameState. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Pass gameState.lastDrawn and gameState.isComplete (and calledNumbers) from useTambolaGame into the HistorySection so there is a single source of truth for the shown last number."
+          "description": "Update LIVE_VERSION to 'Draft 34' and set LIVE_VERSION_DATE to the Draft 34 publish date in YYYY-MM-DD format, keeping this file as the single source of truth for version display across the UI."
         }
       ]
     }
