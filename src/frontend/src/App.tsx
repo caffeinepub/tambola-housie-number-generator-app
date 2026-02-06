@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NumberBoard } from './features/tambola/components/NumberBoard';
-import { HistoryPanel } from './features/tambola/components/HistoryPanel';
+import { HistorySection } from './features/tambola/components/HistorySection';
 import { GameControls } from './features/tambola/components/GameControls';
 import { NewGameControl } from './features/tambola/components/NewGameControl';
 import { VoiceAnnouncementsPanel } from './features/tambola/components/VoiceAnnouncementsPanel';
@@ -86,9 +86,13 @@ function App() {
       {/* Main Content */}
       <main className="container mx-auto px-2 sm:px-4 py-6 sm:py-8 app-main-content">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-          {/* History Panel - order-1 on mobile, lg:order-1 on desktop (left column, top) */}
+          {/* History Section (Last Number + Call History) - order-1 on mobile, lg:order-1 on desktop (left column, top) */}
           <div className="order-1 lg:order-1">
-            <HistoryPanel calledNumbers={gameState.calledNumbers} />
+            <HistorySection
+              calledNumbers={gameState.calledNumbers}
+              lastDrawn={gameState.lastDrawn}
+              isComplete={gameState.isComplete}
+            />
           </div>
 
           {/* Game Controls - order-2 on mobile (after history), lg:order-3 on desktop (right column, top) */}

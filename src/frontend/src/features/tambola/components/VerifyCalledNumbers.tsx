@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,7 @@ type VerificationResult =
 export function VerifyCalledNumbers({ calledNumbers }: VerifyCalledNumbersProps) {
   const [inputs, setInputs] = useState<string[]>(Array(15).fill(''));
   const [result, setResult] = useState<VerificationResult>({ status: 'idle' });
+  const isVerifyingRef = useRef(false);
   
   const {
     isListening,
@@ -31,10 +32,10 @@ export function VerifyCalledNumbers({ calledNumbers }: VerifyCalledNumbersProps)
     resetTranscript,
   } = useSpeechRecognition();
 
-  // Clear result when inputs change or calledNumbers changes
+  // Clear result when calledNumbers changes
   useEffect(() => {
     setResult({ status: 'idle' });
-  }, [inputs, calledNumbers]);
+  }, [calledNumbers]);
 
   // Process transcript when recording stops
   useEffect(() => {
@@ -50,6 +51,7 @@ export function VerifyCalledNumbers({ calledNumbers }: VerifyCalledNumbersProps)
       });
       
       setInputs(newInputs);
+      setResult({ status: 'idle' });
       resetTranscript();
     }
   }, [isListening, transcript, resetTranscript]);
@@ -60,14 +62,27 @@ export function VerifyCalledNumbers({ calledNumbers }: VerifyCalledNumbersProps)
     const newInputs = [...inputs];
     newInputs[index] = sanitized;
     setInputs(newInputs);
+    
+    // Reset result on manual input change
+    if (!isVerifyingRef.current) {
+      setResult({ status: 'idle' });
+    }
   };
 
   const handleVerify = () => {
-    // Parse all inputs into valid numbers
+    isVerifyingRef.current = true;
+    
+    // Snapshot current inputs before clearing
+    const snapshotInputs = [...inputs];
+    
+    // Clear all inputs immediately
+    setInputs(Array(15).fill(''));
+    
+    // Parse snapshotted inputs into valid numbers
     const enteredNumbers: number[] = [];
     const seen = new Set<number>();
     
-    for (const input of inputs) {
+    for (const input of snapshotInputs) {
       const trimmed = input.trim();
       if (!trimmed) continue;
       
@@ -81,6 +96,7 @@ export function VerifyCalledNumbers({ calledNumbers }: VerifyCalledNumbersProps)
     // Validate count
     if (enteredNumbers.length === 0) {
       setResult({ status: 'error', message: 'Please enter at least 1 number.' });
+      isVerifyingRef.current = false;
       return;
     }
 
@@ -97,6 +113,8 @@ export function VerifyCalledNumbers({ calledNumbers }: VerifyCalledNumbersProps)
     } else {
       setResult({ status: 'success', verifiedCount: enteredNumbers.length });
     }
+    
+    isVerifyingRef.current = false;
   };
 
   const handleStartRecording = () => {

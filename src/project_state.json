@@ -1,34 +1,24 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Project now includes a “Verify Number” feature where users manually enter 1–15 numbers and verify them; scope expanded to add a voice recording option that transcribes spoken digits to auto-fill the 1–15 inputs and improves failure results to show which number(s) were not called/spoken.",
-  "architectural_notes": [
-    "Use speech-to-text to transcribe a single audio recording into a sequence of digits and map them into the 1–15 verification inputs; keep manual entry available as fallback."
-  ],
+  "summary": "New project",
+  "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-update-the-existing-verify-called-numbers-verify-number-ui-to-use-15-separate-inputs-positions-1-15-instead-of-a-single-comma-space-separated-text-field-while-still-allowing-manual-typing-in-any-position",
-      "title": "Update the existing “Verify Called Numbers” (Verify Number) UI to use 15 separate inputs (positions 1–15) instead of a single comma/space-separated text field, while still allowing manual typing in any position.",
+      "id": "feature-add-a-new-ui-box-above-the-existing-call-history-panel-that-displays-the-most-recent-last-drawn-tambola-number-updating-whenever-a-new-number-is-drawn",
+      "title": "Add a new UI box above the existing \"Call History\" panel that displays the most recent/last drawn Tambola number, updating whenever a new number is drawn.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-a-voice-recording-option-to-the-verify-number-section-that-records-all-numbers-in-one-recording-transcribes-speech-into-digits-and-auto-fills-the-1-15-input-boxes-in-order-while-keeping-manual-typing-available-as-a-fallback",
-      "title": "Add a voice recording option to the Verify Number section that records all numbers in one recording, transcribes speech into digits, and auto-fills the 1–15 input boxes in order, while keeping manual typing available as a fallback.",
+      "id": "feature-wire-the-last-most-recent-drawn-number-into-the-history-section-by-passing-the-needed-state-from-the-main-game-hook-into-the-history-ui-e-g-use-gamestate-lastdrawn-and-gamestate-iscomplete-reusing-the-existing-lastnumberdisplay-component-where-appropriate",
+      "title": "Wire the last/most recent drawn number into the History section by passing the needed state from the main game hook into the History UI (e.g., use gameState.lastDrawn and gameState.isComplete), reusing the existing LastNumberDisplay component where appropriate.",
       "reqIds": [
         "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-improve-verification-failure-results-so-that-when-verification-fails-the-ui-displays-exactly-which-entered-number-s-have-not-been-called-instead-of-a-generic-number-not-called-message",
-      "title": "Improve verification failure results so that when verification fails, the UI displays exactly which entered number(s) have not been called (instead of a generic “number not called” message).",
-      "reqIds": [
-        "REQ-3"
       ],
       "version": 1
     }
@@ -36,18 +26,12 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add voice recording option to Verify Number: record all numbers in one recording, transcribe to digits, and auto-fill the 1–15 input boxes while still allowing manual typing.",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "On verification failure, display which specific number(s)/input positions were not called/spoken (missing) to clarify why verification failed.",
+      "summary": "Add a box above Call History to display the most recent/last draw number",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Add voice-to-digits autofill and clearer failure details in Verify Number",
+  "projectName": "Add a recent/last draw number box above Call History",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

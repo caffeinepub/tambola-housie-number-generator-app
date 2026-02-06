@@ -1,51 +1,41 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T11:44:11.502Z",
+  "generatedAt": "2026-02-06T13:11:13.960Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 3,
+    "total": 2,
+    "implemented": 2,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Update the existing “Verify Called Numbers” (Verify Number) UI to use 15 separate inputs (positions 1–15) instead of a single comma/space-separated text field, while still allowing manual typing in any position.",
+        "summary": "Add a new UI box above the existing \"Call History\" panel that displays the most recent/last drawn Tambola number, updating whenever a new number is drawn.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx",
-          "frontend/src/features/tambola/verify/parseEnteredNumbers.ts"
+          "frontend/src/features/tambola/components/HistorySection.tsx",
+          "frontend/src/App.tsx",
+          "frontend/src/features/tambola/components/HistoryPanel.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx"
+          "frontend/src/features/tambola/components/HistorySection.tsx",
+          "frontend/src/App.tsx",
+          "frontend/src/features/tambola/components/HistoryPanel.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Add a voice recording option to the Verify Number section that records all numbers in one recording, transcribes speech into digits, and auto-fills the 1–15 input boxes in order, while keeping manual typing available as a fallback.",
+        "summary": "Wire the last/most recent drawn number into the History section by passing the needed state from the main game hook into the History UI (e.g., use gameState.lastDrawn and gameState.isComplete), reusing the existing LastNumberDisplay component where appropriate.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/tambola/voice/useSpeechRecognition.ts",
-          "frontend/src/features/tambola/verify/parseSpokenNumbers.ts",
-          "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx"
+          "frontend/src/features/tambola/components/HistorySection.tsx",
+          "frontend/src/App.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/tambola/voice/useSpeechRecognition.ts",
-          "frontend/src/features/tambola/verify/parseSpokenNumbers.ts",
-          "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx"
-        ]
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Improve verification failure results so that when verification fails, the UI displays exactly which entered number(s) have not been called (instead of a generic “number not called” message).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx"
+          "frontend/src/features/tambola/components/HistorySection.tsx",
+          "frontend/src/App.tsx"
         ]
       }
     ]
@@ -55,9 +45,9 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/features/tambola/components/VerifyCalledNumbers.tsx",
-    "frontend/src/features/tambola/verify/parseSpokenNumbers.ts",
-    "frontend/src/features/tambola/voice/useSpeechRecognition.ts",
+    "frontend/src/App.tsx",
+    "frontend/src/features/tambola/components/HistoryPanel.tsx",
+    "frontend/src/features/tambola/components/HistorySection.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

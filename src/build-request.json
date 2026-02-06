@@ -1,77 +1,55 @@
 {
   "kind": "build_request",
-  "title": "Add voice-to-digits autofill and clearer failure details in Verify Number",
+  "title": "Add a recent/last draw number box above Call History",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Update the existing “Verify Called Numbers” (Verify Number) UI to use 15 separate inputs (positions 1–15) instead of a single comma/space-separated text field, while still allowing manual typing in any position.",
+      "text": "Add a new UI box above the existing \"Call History\" panel that displays the most recent/last drawn Tambola number, updating whenever a new number is drawn.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-build"
+          "msg-3",
+          "msg-14"
         ],
         "quotes": [
-          "No now the setup is we manually enter 1-15 numbers to verify"
+          "Perfect now add a box above call history to show the recent / last draw number",
+          "Generate code"
         ]
       },
       "acceptanceCriteria": [
-        "The Verify section renders exactly 15 input boxes clearly labeled or visually grouped as positions 1–15.",
-        "Each input accepts manual typing and can be edited independently.",
-        "Verification uses the values from these 15 inputs (ignoring empty inputs) as the entered numbers.",
-        "If no numbers are entered across all boxes, the UI shows an error message: “Please enter at least 1 number.”"
+        "On all screen sizes, a clearly separated box/card is rendered above the Call History card in the left column (where HistoryPanel currently appears).",
+        "When at least one number has been called, the box displays the current last drawn number from the game state.",
+        "When no number has been called yet, the box displays a clear placeholder (e.g., \"--\" or \"No number drawn yet\").",
+        "The new UI does not introduce horizontal scrolling or layout overflow in the left column and remains responsive on mobile and desktop."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Add a voice recording option to the Verify Number section that records all numbers in one recording, transcribes speech into digits, and auto-fills the 1–15 input boxes in order, while keeping manual typing available as a fallback.",
+      "text": "Wire the last/most recent drawn number into the History section by passing the needed state from the main game hook into the History UI (e.g., use gameState.lastDrawn and gameState.isComplete), reusing the existing LastNumberDisplay component where appropriate.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-build"
+          "msg-3"
         ],
         "quotes": [
-          "i want that we speak and number entered in that box and than we will click on verify button",
-          "1-yes",
-          "2- all number in one recording",
-          "3. Should allow mannual typing"
+          "add a box above call history to show the recent / last draw number"
         ]
       },
       "acceptanceCriteria": [
-        "A “Record” control is available in the Verify section; starting recording begins listening and provides a clear in-progress UI state (e.g., “Listening…” and a Stop button).",
-        "When recording is stopped (or recognition ends), the app transcribes the spoken audio to text using a browser-native approach (no external services).",
-        "The transcription is parsed into integers and the first 15 valid numbers are placed into input boxes 1–15 in order.",
-        "If more than 15 valid numbers are spoken, extras are ignored (no crash).",
-        "If the browser does not support speech recognition or permission is denied, the UI shows a clear error message and manual entry continues to work."
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Improve verification failure results so that when verification fails, the UI displays exactly which entered number(s) have not been called (instead of a generic “number not called” message).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-user-build"
-        ],
-        "quotes": [
-          "in result when failed to verify show which number not called"
-        ]
-      },
-      "acceptanceCriteria": [
-        "If any entered numbers are not present in the called numbers list, the error state lists them (e.g., “Not called: 12, 45”).",
-        "The list of not-called numbers is unique and displayed in a stable, readable format.",
-        "If all entered numbers have been called, the success message remains and reflects the verified count (e.g., “All 7 numbers have been called”)."
+        "The displayed value matches the latest drawn number shown/used elsewhere in the app state (no duplicate or separately stored value).",
+        "If the game is complete, the box reflects completion state consistently with the underlying game state (e.g., via isComplete).",
+        "No backend changes are required to support this display (purely derived from existing frontend game state)."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/components/ui (Shadcn components are read-only and must be composed).",
-    "Do not edit immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx."
+    "Do not perform or require any deployment/publishing actions; only generate code changes.",
+    "Do not edit files under frontend immutablePaths (e.g., frontend/src/hooks/useInternetIdentity.ts(x), frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui)."
   ],
   "nonGoals": [
-    "Do not add any backend (Motoko) changes for speech transcription.",
-    "Do not integrate any third-party speech-to-text APIs or external services.",
-    "Do not change the Tambola draw/undo/reset game logic outside of what is necessary to read calledNumbers for verification."
+    "Adding new backend storage or Motoko canister logic for tracking the last drawn number.",
+    "Changing unrelated layout areas (Number Board, Game Controls, Voice settings) beyond what is necessary to place the new box above Call History."
   ],
   "imageRequirements": {
     "required": [],
