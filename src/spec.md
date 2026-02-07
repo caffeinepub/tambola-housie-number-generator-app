@@ -1,11 +1,10 @@
 # Specification
 
 ## Summary
-**Goal:** Update the app’s published draft version identifier to Draft 34 so the UI reflects the currently published draft.
+**Goal:** Remove the “Draft 34” live version label from the footer without changing any other footer content or layout.
 
 **Planned changes:**
-- Update `frontend/src/release/liveVersion.ts` to export `LIVE_VERSION` as `Draft 34`.
-- Set `LIVE_VERSION_DATE` in `frontend/src/release/liveVersion.ts` to the Draft 34 publish date in `YYYY-MM-DD` format.
-- Verify any UI locations that display the live/draft version show Draft 34 (and no longer show Draft 32 as the live version).
+- Update the footer rendering to omit the “Draft 34” text.
+- Ensure any separator (e.g., “•”) tied to the version label is not shown when the label is removed.
 
-**User-visible outcome:** Anywhere the app displays the published/live draft version, it shows “Draft 34” (with the updated publish date).
+**User-visible outcome:** The footer no longer shows “Draft 34”, while the rest of the footer (© line, heart icon, “using”, and caffeine.ai link) remains unchanged.

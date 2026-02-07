@@ -1,21 +1,21 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Publish Draft Version 34",
+  "title": "Remove live version label from footer",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Update the single source of truth live version constants so the UI reflects Draft 34 as the currently published draft and shows the correct publish date.",
+      "summary": "Remove the “Draft 34” live version label from the footer while keeping all other footer content and layout unchanged, including removing the adjacent separator.",
       "acceptanceCriteria": [
-        "frontend/src/release/liveVersion.ts exports LIVE_VERSION with the exact string value 'Draft 34'.",
-        "frontend/src/release/liveVersion.ts exports LIVE_VERSION_DATE as a YYYY-MM-DD string matching the Draft 34 publish date.",
-        "After building the frontend, any UI location that displays the live/draft version shows Draft 34 (no remaining Draft 32 references used for live version display)."
+        "The footer no longer displays the text “Draft 34” anywhere.",
+        "All other footer elements remain visible and unchanged (© line, heart icon, “using”, and caffeine.ai link).",
+        "No extra separator (e.g., the “•” bullet) is shown if the version label is not rendered."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/release/liveVersion.ts",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update LIVE_VERSION to 'Draft 34' and set LIVE_VERSION_DATE to the Draft 34 publish date in YYYY-MM-DD format, keeping this file as the single source of truth for version display across the UI."
+          "description": "Update the footer JSX to stop rendering the LIVE_VERSION value and remove the adjacent separator so the footer content and spacing remain otherwise unchanged."
         }
       ]
     }

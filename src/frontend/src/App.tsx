@@ -9,7 +9,6 @@ import { VerifyCalledNumbers } from './features/tambola/components/VerifyCalledN
 import { useTambolaGame } from './features/tambola/useTambolaGame';
 import { useVoiceSettings } from './features/tambola/voice/useVoiceSettings';
 import { useVoiceAnnouncements } from './features/tambola/voice/useVoiceAnnouncements';
-import { LIVE_VERSION } from './release/liveVersion';
 import { Dices, Heart } from 'lucide-react';
 
 function App() {
@@ -150,8 +149,6 @@ function App() {
             >
               caffeine.ai
             </a>
-            <span className="hidden sm:inline">•</span>
-            <span className="text-xs opacity-70">{LIVE_VERSION}</span>
           </div>
         </div>
       </footer>

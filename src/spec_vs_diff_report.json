@@ -1,38 +1,39 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T14:59:23.535Z",
-  "summary": "REQ-1 is partially implemented: LIVE_VERSION and LIVE_VERSION_DATE were updated in the single source of truth file, but evidence suggests at least one UI location may still display a hardcoded “Draft 32” (App.tsx footer), which would violate the acceptance criteria. Additionally, two non-requested meta/state files were modified.",
+  "generatedAt": "2026-02-06T15:32:59.859Z",
+  "summary": "The BuildRequest only asked to remove the “Draft 34” label from the footer without changing anything else. The diff summary does not provide direct code evidence that the footer text/bullet were updated, and it shows substantial unrelated application logic changes in App.tsx plus metadata changes in project_state.json.",
   "missing_requirements": [
     {
       "id": "REQ-1",
-      "requirement": "After building the frontend, any UI location that displays the live/draft version shows Draft 34 (no remaining Draft 32 references used for live version display).",
-      "reason": "The diff evidence indicates the app footer still displays “Draft 32”, suggesting the UI may not be fully driven by the updated liveVersion.ts constants or still contains a live-version hardcode.",
+      "requirement": "Remove only the footer text that displays “Draft 34” (the live version label) while keeping the rest of the footer content and layout unchanged (including no leftover separator/bullet).",
+      "reason": "The provided App.tsx diff is truncated before any footer rendering, so there is no direct evidence in the diff snippet that “Draft 34” was removed and that no extra separator (e.g., “•”) remains. The file summary text claims removal, but the verifier is constrained to evidence from the diff snippet.",
       "evidence": [
-        "frontend-file-summaries.txt (mentions: \"frontend/src/App.tsx\" ... \"Draft 32 version display\")"
+        "frontend/src/App.tsx (truncated)"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Updated/modified project tracking metadata (project_state.json) including new_feature_requests entries and status fields.",
-      "reason": "BuildRequest only asked to update the live version identifier in frontend/src/release/liveVersion.ts; it did not request changes to project state metadata files.",
+      "description": "Added/changed Tambola voice-announcement triggering logic (tracking lastAction, preventing announcements on undo/reset, English-only TTS routing) and related state handling in the main App component.",
+      "reason": "Not requested by the BuildRequest, which only asked to remove a specific footer label without other UI/logic changes.",
       "evidence": [
-        "project_state.json"
+        "frontend/src/App.tsx (truncated)",
+        "frontend-file-summaries.txt (mentions voice announcement controller changes)"
       ]
     },
     {
-      "description": "Modified frontend-file-summaries.txt content describing extensive Tambola/voice/UI changes.",
-      "reason": "BuildRequest explicitly forbids introducing new features beyond updating the published draft version identifier; updating this summary file is not requested and references unrelated feature work.",
+      "description": "Updated project metadata to mention “App deployed to production (Version 35)” and added new_feature_requests entries (AR-1/AR-2).",
+      "reason": "Not requested by the BuildRequest; it specifically disallowed implementing new versioning/publish workflows and only asked for a footer text removal.",
       "evidence": [
-        "frontend-file-summaries.txt"
+        "project_state.json"
       ]
     }
   ],
-  "confidence": 0.66,
+  "confidence": 0.62,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/release/liveVersion.ts",
+    "frontend/src/App.tsx",
     "project_state.json"
   ]
 }

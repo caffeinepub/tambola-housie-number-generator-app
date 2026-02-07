@@ -1,39 +1,50 @@
 {
   "kind": "build_request",
-  "title": "Publish Draft Version 34",
+  "title": "Remove “Draft 34” version label from footer",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Update the app’s published version identifier to Draft 34 by changing the single source of truth constants in frontend/src/release/liveVersion.ts so the UI reflects that Draft 34 is the currently published draft (and set LIVE_VERSION_DATE to the publish date in YYYY-MM-DD format).",
+      "text": "Remove only the footer text that displays “Draft 34” (the live version label) while keeping the rest of the footer content and layout unchanged.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "Yes now fine, publish draft version 34"
+          "Only the line Draft 34 one",
+          "Yes",
+          "Now"
         ]
       },
       "acceptanceCriteria": [
-        "frontend/src/release/liveVersion.ts exports LIVE_VERSION with the exact string value 'Draft 34'.",
-        "frontend/src/release/liveVersion.ts exports LIVE_VERSION_DATE as a YYYY-MM-DD string matching the Draft 34 publish date.",
-        "After building the frontend, any UI location that displays the live/draft version shows Draft 34 (no remaining Draft 32 references used for live version display)."
+        "The footer no longer displays the text “Draft 34” anywhere.",
+        "All other footer elements remain visible and unchanged (© line, heart icon, “using”, and caffeine.ai link).",
+        "No extra separator (e.g., the “•” bullet) is shown if the version label is not rendered."
       ]
     }
   ],
   "constraints": [
-    "Do not modify any files under frontend/src/components/ui (read-only UI component sources).",
-    "Do not modify immutable hook files (frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx).",
-    "Backend must remain single-actor (no additional canisters/services)."
+    "Use English for any user-facing text.",
+    "Do not edit files under frontend/src/components/ui (compose them instead if needed)."
   ],
   "nonGoals": [
-    "Do not change TTS/voice behavior (English-only TTS is already approved as working).",
-    "Do not introduce new features beyond updating the published draft version identifier.",
-    "Do not change deployment tooling or add CI/CD automation."
+    "Do not remove the entire footer.",
+    "Do not change any other footer wording or styling beyond removing the “Draft 34” label.",
+    "Do not implement new versioning/publish workflows."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

@@ -1,14 +1,16 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Project involves an English-only text-to-speech (TTS) update; user has approved Version 34 and requested publishing it as a draft.",
+  "summary": "App deployed to production (Version 35); requested UI cleanup to remove outdated “Draft 34” text from the footer.",
   "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
+  "known_issues": [
+    "Footer displays outdated static text “Draft 34” even after publishing Version 35 (user requested removal)"
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-update-the-app-s-published-version-identifier-to-draft-34-by-changing-the-single-source-of-truth-constants-in-frontend-src-release-liveversion-ts-so-the-ui-reflects-that-draft-34-is-the-currently-published-draft-and-set-live-version-date-to-the-publish-date-in-yyyy-mm-dd-format",
-      "title": "Update the app’s published version identifier to Draft 34 by changing the single source of truth constants in frontend/src/release/liveVersion.ts so the UI reflects that Draft 34 is the currently published draft (and set LIVE_VERSION_DATE to the publish date in YYYY-MM-DD format).",
+      "id": "feature-remove-only-the-footer-text-that-displays-draft-34-the-live-version-label-while-keeping-the-rest-of-the-footer-content-and-layout-unchanged",
+      "title": "Remove only the footer text that displays “Draft 34” (the live version label) while keeping the rest of the footer content and layout unchanged.",
       "reqIds": [
         "REQ-1"
       ],
@@ -18,12 +20,12 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Publish draft release for Version 34 (includes updated English-only TTS)",
+      "summary": "Remove only the “Draft 34” text line from the footer while keeping the rest unchanged",
       "reqIds": [],
-      "status": "pending"
+      "status": "in_progress"
     }
   ],
-  "projectName": "Publish Draft Version 34",
+  "projectName": "Remove “Draft 34” version label from footer",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

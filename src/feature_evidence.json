@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-app-s-published-version-identifier-to-draft-34-by-changing-the-single-source-of-truth-constants-in-frontend-src-release-liveversion-ts-so-the-ui-reflects-that-draft-34-is-the-currently-published-draft-and-set-live-version-date-to-the-publish-date-in-yyyy-mm-dd-format",
-      "featureTitle": "Update the app’s published version identifier to Draft 34 by changing the single source of truth constants in frontend/src/release/liveVersion.ts so the UI reflects that Draft 34 is the currently published draft (and set LIVE_VERSION_DATE to the publish date in YYYY-MM-DD format).",
+      "featureId": "feature-remove-only-the-footer-text-that-displays-draft-34-the-live-version-label-while-keeping-the-rest-of-the-footer-content-and-layout-unchanged",
+      "featureTitle": "Remove only the footer text that displays “Draft 34” (the live version label) while keeping the rest of the footer content and layout unchanged.",
       "files": [
-        "frontend/src/release/liveVersion.ts"
+        "frontend/src/App.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",

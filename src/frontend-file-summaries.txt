@@ -6,7 +6,7 @@
   "frontend/src/features/tambola/components/NumberBoard.tsx": "9x10 grid displaying all 90 Tambola numbers with visual distinction between called and uncalled numbers using color gradients.",
   "frontend/src/features/tambola/components/HistoryPanel.tsx": "Scrollable panel displaying all called numbers in a fully responsive 9-column grid with fixed height (300px mobile, 400px desktop) and vertical scroll support, preserving the most recent number in red gradient and older numbers in green gradient.",
   "frontend/src/features/tambola/components/GameControls.tsx": "Game controls component with Draw Number button (4-second cooldown), Quick Reset button, and Auto Draw controls with interval slider (4-10 seconds range).",
-  "frontend/src/App.tsx": "Main application component with responsive layout rendering all Tambola game sections, footer with branding attribution and Draft 32 version display.",
+  "frontend/src/App.tsx": "Main application component with responsive layout rendering all Tambola game sections and footer with branding attribution (© 2026, heart icon, and caffeine.ai link) without version display.",
   "frontend/src/index.css": "Global styles with warm amber/orange OKLCH color palette, subtle background pattern overlay, and global bottom padding on main content using safe-area-inset-bottom for mobile devices.",
   "frontend/tailwind.config.js": "Tailwind configuration with extended color tokens matching the warm game-night theme and custom font family.",
   "frontend/index.html": "HTML entry point with viewport-fit=cover meta tag to support safe-area insets on mobile devices with notches or home indicators.",
