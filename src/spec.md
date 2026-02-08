@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Ensure host voice recordings play only for the exact drawn number (1–90), fix “digits-then-number” sequencing to avoid recording collisions, and provide a Host Voice Recordings manager UI consistent with the provided screenshot.
+**Goal:** Roll back and redeploy the live app using Draft 52 exactly as-is (discarding Drafts 53/54), and ensure live version metadata reflects Draft 52.
 
 **Planned changes:**
-- Update recorded-clip lookup to match numbers exactly (1–90) so a clip for “1” never triggers for “12”, “13”, “41”, etc.
-- Adjust announcement sequencing for “digits-then-number” mode so digit steps always use TTS and only the final full-number step may use a host recording (based on voice source priority).
-- Keep (or recreate if missing) the “Host Voice Recordings” dialog UI: title, instructions, scrollable 1–90 grid, per-number record/stop, per-number play/delete when a recording exists, recorded indicator per number, recorded count badge (“X / 90 recorded”), and Close action; refresh recorded state on open.
+- Rebuild and deploy the application from Draft 52 code only (do not include Draft 53/54), with no intentional functional or visual changes.
+- Verify the “Voice Announcements” toggle default state on fresh load matches Draft 52 behavior (OFF by default) and is not carrying over Draft 54 behavior.
+- Update `frontend/src/release/liveVersion.ts` to set `LIVE_VERSION` to “Draft 52” and set `LIVE_VERSION_DATE` to the deployment date (YYYY-MM-DD).
 
-**User-visible outcome:** Host announcements reliably use the correct recording only for the exact drawn number, digit-by-digit announcements never accidentally trigger recordings, and users can manage recordings for numbers 1–90 via a dedicated dialog matching the shown design.
+**User-visible outcome:** The live app runs the Draft 52 build; on a fresh session the “Voice Announcements” toggle defaults to OFF (as in Draft 52), and the app’s live version label shows Draft 52 with the updated date.

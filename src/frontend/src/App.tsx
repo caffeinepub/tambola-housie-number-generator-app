@@ -40,6 +40,9 @@ function App() {
   // Refs to track last announced state
   const lastAnnouncedNumberRef = useRef<number | null>(null);
   const lastAnnouncedActionRef = useRef<string | null>(null);
+  
+  // Ref to ensure startup initialization runs only once
+  const startupInitAttemptedRef = useRef(false);
 
   const handleDraw = () => {
     // If Auto Draw is ON, perform one draw and then turn it OFF
@@ -71,6 +74,18 @@ function App() {
       resetVoiceUnlock();
     }
   };
+
+  // Startup effect: if voice is enabled by default, auto-initialize once
+  useEffect(() => {
+    if (
+      voiceSettings.enabled &&
+      voiceUnlockStatus === 'not-initialized' &&
+      !startupInitAttemptedRef.current
+    ) {
+      startupInitAttemptedRef.current = true;
+      initializeVoice();
+    }
+  }, [voiceSettings.enabled, voiceUnlockStatus, initializeVoice]);
 
   // Effect to trigger voice announcement when a number is drawn
   useEffect(() => {

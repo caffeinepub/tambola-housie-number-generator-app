@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-ensure-host-recorded-audio-clips-are-only-used-for-the-exact-selected-drawn-number-1-90-and-never-unintentionally-triggered-for-other-numbers-e-g-clip-for-1-must-not-play-when-announcing-12-13-41-etc",
-      "featureTitle": "Ensure host-recorded audio clips are only used for the exact selected/drawn number (1–90) and never unintentionally triggered for other numbers (e.g., clip for 1 must not play when announcing 12, 13, 41, etc.).",
+      "featureId": "feature-after-deploying-draft-52-verify-that-the-voice-announcements-toggle-default-state-matches-draft-52-behavior-it-should-be-off-on-initial-load-as-observed-in-version-52-and-ensure-the-deployed-build-reflects-that-draft-52-default-without-carrying-over-draft-54-behavior",
+      "featureTitle": "After deploying draft 52, verify that the \"Voice Announcements\" toggle default state matches draft 52 behavior (it should be OFF on initial load, as observed in version 52), and ensure the deployed build reflects that draft-52 default without carrying over draft-54 behavior.",
       "files": [
-        "frontend/src/features/tambola/voice/types.ts",
-        "frontend/src/features/tambola/voice/useVoiceAnnouncements.ts"
+        "frontend/src/features/tambola/voice/voiceSettingsStorage.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -16,16 +15,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-1"
+        "REQ-3"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-the-voice-announcement-playback-sequencing-so-that-in-digits-then-number-reading-mode-digit-steps-always-use-tts-never-host-recordings-while-the-final-full-number-step-may-use-host-recordings-according-to-the-selected-voice-source-priority",
-      "featureTitle": "Update the voice announcement playback sequencing so that in “digits-then-number” reading mode, digit steps always use TTS (never host recordings), while the final full-number step may use host recordings according to the selected voice source priority.",
+      "featureId": "feature-update-the-live-release-metadata-to-reflect-that-draft-52-is-now-the-live-deployed-version-update-the-constants-in-frontend-src-release-liveversion-ts-accordingly",
+      "featureTitle": "Update the live release metadata to reflect that Draft 52 is now the live deployed version (update the constants in frontend/src/release/liveVersion.ts accordingly).",
       "files": [
-        "frontend/src/features/tambola/voice/useVoiceAnnouncements.ts",
-        "frontend/src/features/tambola/voice/voiceClipsStore.ts"
+        "frontend/src/release/liveVersion.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -35,7 +33,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-2"
+        "REQ-4"
       ],
       "confidence": "high"
     }

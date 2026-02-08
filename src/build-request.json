@@ -1,73 +1,71 @@
 {
   "kind": "build_request",
-  "title": "Host voice recordings: exact number-matched playback (no digit/substring collisions)",
+  "title": "Redeploy app using draft version 52 (rollback from drafts 53/54)",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Ensure host-recorded audio clips are only used for the exact selected/drawn number (1–90) and never unintentionally triggered for other numbers (e.g., clip for 1 must not play when announcing 12, 13, 41, etc.).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "You want the host voice playback to match numbers exactly — for example, recording for 1 should only play for 1 (not 12, 13, 41, etc.), and the same rule should apply for all numbers 1–90."
-        ]
-      },
-      "acceptanceCriteria": [
-        "When announcing 12, a recording saved for 1 is not played as part of the announcement sequence.",
-        "Recordings, if present, are only played for the final/full number being announced (e.g., 12 uses clip 12 if it exists, otherwise uses TTS for 12).",
-        "This behavior applies consistently for all numbers 1–90."
-      ]
-    },
-    {
       "id": "REQ-2",
-      "text": "Update the voice announcement playback sequencing so that in “digits-then-number” reading mode, digit steps always use TTS (never host recordings), while the final full-number step may use host recordings according to the selected voice source priority.",
-      "target": "frontend",
+      "text": "Rebuild and deploy the application using the code exactly as it exists in draft version 52, discarding drafts 53 and 54 and making no functional or visual changes beyond selecting draft 52 for the live deployment.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-recent-13",
+          "msg-recent-4"
         ],
         "quotes": [
-          "recording for 1 should only play for 1 (not 12, 13, 41, etc.)"
+          "Rebuilt/deployed using draft 52",
+          "Discard 53, 54 draft version roll back to 52"
         ]
       },
       "acceptanceCriteria": [
-        "With reading mode set to “digits-then-number” and voice source priority set to “recording-first”, announcing 12 speaks “1” and “2” via TTS and then plays clip 12 if it exists (else TTS for 12).",
-        "With reading mode set to “digits-then-number”, digit steps do not call into recorded-clip lookup/storage at all.",
-        "With reading mode set to “single”, announcing 12 may use clip 12 (if present) according to voice source priority (no regression)."
+        "The deployed/live app is built from draft 52 code (not draft 53 or 54).",
+        "No intentional functional changes or UI/UX changes are introduced as part of this redeploy (beyond switching the deployed draft)."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Keep (or recreate if missing) a “Host Voice Recordings” manager UI matching the uploaded screenshot: a dialog titled “Host Voice Recordings” with instructions, a scrollable 1–90 grid, per-number record/stop controls, and per-number play/delete controls when a recording exists, plus a recorded count badge and close button.",
+      "text": "After deploying draft 52, verify that the \"Voice Announcements\" toggle default state matches draft 52 behavior (it should be OFF on initial load, as observed in version 52), and ensure the deployed build reflects that draft-52 default without carrying over draft-54 behavior.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-recent-8"
         ],
         "quotes": [
-          "Build"
+          "No voice announcement toggle is off in version 52 but its on in version 54"
         ]
       },
       "acceptanceCriteria": [
-        "The dialog displays numbers 1–90 in a grid and supports recording, stopping, playback, and deletion per number.",
-        "A visual indicator shows whether each number has a recording.",
-        "The footer shows “X / 90 recorded” and includes a Close action.",
-        "Opening the dialog refreshes the list of recorded numbers from storage so the UI stays accurate."
+        "On a fresh load (new browser session/incognito) of the deployed draft-52 build, the \"Voice Announcements\" switch renders OFF by default if that is how draft 52 behaved.",
+        "The deployed build does not show the draft-54 default (ON) when running the draft-52 deployment."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Update the live release metadata to reflect that Draft 52 is now the live deployed version (update the constants in frontend/src/release/liveVersion.ts accordingly).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-recent-13"
+        ],
+        "quotes": [
+          "Rebuilt/deployed using draft 52"
+        ]
+      },
+      "acceptanceCriteria": [
+        "frontend/src/release/liveVersion.ts shows LIVE_VERSION as \"Draft 52\".",
+        "LIVE_VERSION_DATE is updated to the deployment date in YYYY-MM-DD format."
       ]
     }
   ],
   "constraints": [
-    "Frontend immutable paths must not be edited: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
-    "Backend must remain single-actor in backend/main.mo; only add migration.mo if persistent backend state is introduced (not required for IndexedDB/localStorage changes).",
-    "Use English for any user-facing text."
+    "Do not modify any files under frontend/src/components/ui (read-only).",
+    "Do not change backend architecture (single Motoko actor in backend/main.mo).",
+    "Do not introduce new features or UX changes; the intent is to deploy draft 52 as-is."
   ],
   "nonGoals": [
-    "Adding third-party authentication providers (only Internet Identity is supported).",
-    "Adding external databases or non-Internet-Computer backend services.",
-    "Implementing real-time/multiplayer communication (e.g., WebSockets)."
+    "Adding new Tambola gameplay features.",
+    "Changing voice announcement functionality beyond ensuring the deployed build is truly draft 52 behavior.",
+    "Adding or changing authentication flows."
   ],
   "imageRequirements": {
     "required": [],

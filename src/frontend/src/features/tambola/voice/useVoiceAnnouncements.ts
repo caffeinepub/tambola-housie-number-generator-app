@@ -28,7 +28,28 @@ export function useVoiceAnnouncements() {
       setStatus('playing');
 
       try {
-        // Build playback sequence based on reading mode
+        // When recording-first is selected, check if a recording exists for this number
+        // If it does, play ONLY the recording and skip all TTS steps
+        if (voiceSourcePriority === 'recording-first') {
+          try {
+            const blob = await loadClip(number);
+            if (blob) {
+              // Recording exists - play it and exit (no TTS at all)
+              await playAudioBlob(blob);
+              failureCountRef.current = 0;
+              setStatus('idle');
+              return;
+            }
+            // No recording found, continue with TTS flow below
+          } catch (error) {
+            // Recording playback failed - exit without TTS fallback
+            console.error(`Recording for ${number} failed, no TTS fallback in recording-first mode:`, error);
+            setStatus('idle');
+            return;
+          }
+        }
+
+        // Build playback sequence based on reading mode (TTS flow)
         const steps: PlaybackStep[] = [];
 
         if (number >= 1 && number <= 9) {
@@ -66,33 +87,11 @@ export function useVoiceAnnouncements() {
               hadTTSFailure = true;
             }
           } else if (step.type === 'full-number') {
-            // Full-number step: eligible for recordings based on priority
-            if (voiceSourcePriority === 'recording-first') {
-              try {
-                const blob = await loadClip(step.value);
-                if (blob) {
-                  await playAudioBlob(blob);
-                } else {
-                  // No recording, use TTS
-                  const result = await speakText(step.value.toString());
-                  if (result !== 'success') {
-                    hadTTSFailure = true;
-                  }
-                }
-              } catch (error) {
-                // Recording playback failed, fallback to TTS
-                console.log(`Recording for ${step.value} failed, using TTS fallback`);
-                const result = await speakText(step.value.toString());
-                if (result !== 'success') {
-                  hadTTSFailure = true;
-                }
-              }
-            } else {
-              // TTS first
-              const result = await speakText(step.value.toString());
-              if (result !== 'success') {
-                hadTTSFailure = true;
-              }
+            // Full-number step: always use TTS in this flow
+            // (recording-first with existing clip already returned above)
+            const result = await speakText(step.value.toString());
+            if (result !== 'success') {
+              hadTTSFailure = true;
             }
           }
         }

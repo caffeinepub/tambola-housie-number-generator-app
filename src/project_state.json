@@ -1,24 +1,28 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
-  "summary": "Voice-recording app with a 1–90 numbered interface, where each number’s recording plays back only for that exact number (no partial/substring matches).",
-  "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
+  "projectStateVersion": 5,
+  "summary": "Rollback/redeploy app using draft version 52 (discarding versions 53/54) while preserving draft 52 behavior/UX; investigate mismatch in voice announcement toggle state between v52 and v54.",
+  "architectural_notes": [
+    "Deployment intent: redeploy using draft version 52 exactly as-is; versions 53/54 should be discarded/rolled back."
+  ],
+  "known_issues": [
+    "Voice announcement toggle state differs between versions (off in v52, on in v54); needs verification when deploying v52."
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-ensure-host-recorded-audio-clips-are-only-used-for-the-exact-selected-drawn-number-1-90-and-never-unintentionally-triggered-for-other-numbers-e-g-clip-for-1-must-not-play-when-announcing-12-13-41-etc",
-      "title": "Ensure host-recorded audio clips are only used for the exact selected/drawn number (1–90) and never unintentionally triggered for other numbers (e.g., clip for 1 must not play when announcing 12, 13, 41, etc.).",
+      "id": "feature-after-deploying-draft-52-verify-that-the-voice-announcements-toggle-default-state-matches-draft-52-behavior-it-should-be-off-on-initial-load-as-observed-in-version-52-and-ensure-the-deployed-build-reflects-that-draft-52-default-without-carrying-over-draft-54-behavior",
+      "title": "After deploying draft 52, verify that the \"Voice Announcements\" toggle default state matches draft 52 behavior (it should be OFF on initial load, as observed in version 52), and ensure the deployed build reflects that draft-52 default without carrying over draft-54 behavior.",
       "reqIds": [
-        "REQ-1"
+        "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-the-voice-announcement-playback-sequencing-so-that-in-digits-then-number-reading-mode-digit-steps-always-use-tts-never-host-recordings-while-the-final-full-number-step-may-use-host-recordings-according-to-the-selected-voice-source-priority",
-      "title": "Update the voice announcement playback sequencing so that in “digits-then-number” reading mode, digit steps always use TTS (never host recordings), while the final full-number step may use host recordings according to the selected voice source priority.",
+      "id": "feature-update-the-live-release-metadata-to-reflect-that-draft-52-is-now-the-live-deployed-version-update-the-constants-in-frontend-src-release-liveversion-ts-accordingly",
+      "title": "Update the live release metadata to reflect that Draft 52 is now the live deployed version (update the constants in frontend/src/release/liveVersion.ts accordingly).",
       "reqIds": [
-        "REQ-2"
+        "REQ-4"
       ],
       "version": 1
     }
@@ -26,26 +30,22 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Build voice-recording UI for numbers 1–90 (record/play controls per number)",
-      "reqIds": [],
+      "summary": "Perform a build using the code exactly as it exists in draft version 52, making no functional or visual changes from that draft.",
+      "reqIds": [
+        "REQ-1"
+      ],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Ensure playback matches the exact selected number only (e.g., 1 does not match 12/13/41); apply to all 1–90",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-5",
-      "summary": "Keep (or recreate if missing) a “Host Voice Recordings” manager UI matching the uploaded screenshot: a dialog titled “Host Voice Recordings” with instructions, a scrollable 1–90 grid, per-number record/stop controls, and per-number play/delete controls when a recording exists, plus a recorded count badge and close button.",
+      "summary": "Rebuild and deploy the application using the code exactly as it exists in draft version 52, discarding drafts 53 and 54 and making no functional or visual changes beyond selecting draft 52 for the live deployment.",
       "reqIds": [
-        "REQ-3"
+        "REQ-2"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Host voice recordings: exact number-matched playback (no digit/substring collisions)",
+  "projectName": "Build using draft version 52 with no code changes",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

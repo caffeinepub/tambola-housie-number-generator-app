@@ -28,7 +28,10 @@ export function useWebViewVoiceUnlock() {
       setStatus('ready');
     } catch (error) {
       console.error('Voice initialization failed:', error);
-      setStatus('failed');
+      // If initialization fails due to user-gesture requirement,
+      // reset to 'not-initialized' so the user can try again via the UI
+      // (e.g., by pressing "Enable Voice" button)
+      setStatus('not-initialized');
     }
   }, []);
 

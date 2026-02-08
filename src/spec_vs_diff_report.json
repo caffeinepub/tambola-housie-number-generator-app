@@ -1,56 +1,55 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T18:19:30.458Z",
-  "summary": "Diff implements exact-number clip lookup via IndexedDB keyed by full number and updates announcement sequencing to ensure digit steps use TTS and only the final full-number step is recording-eligible. However, the requested “Host Voice Recordings” manager dialog UI (grid/controls/badge/refresh-on-open) is not evidenced in the provided diff summary. Several unrelated Tambola UI/AutoDraw/theme changes appear that were not requested.",
+  "generatedAt": "2026-02-08T19:24:13.649Z",
+  "summary": "REQ-4 is implemented (liveVersion.ts set to Draft 52 with a deployment date). However, the diff introduces behavioral changes to voice settings storage (defaults and clearing localStorage) and includes meta/documentation updates, which conflicts with REQ-2’s requirement to deploy Draft 52 code as-is with no functional/UX changes. The diff does not provide evidence of an actual rollback/redeploy to Draft 52 codebase; it shows code edits instead.",
   "missing_requirements": [
     {
-      "id": "REQ-3",
-      "requirement": "Keep (or recreate if missing) a “Host Voice Recordings” manager UI matching the screenshot: dialog titled “Host Voice Recordings” with instructions, scrollable 1–90 grid, per-number record/stop controls, and per-number play/delete controls when recording exists, recorded count badge, and Close button; opening refreshes list from storage.",
-      "reason": "The diff summary shows changes to voice announcement logic and an IndexedDB clip store, but does not show any dialog/UI component implementation for managing recordings (no evidence of a dialog, grid UI, record/stop/play/delete controls, recorded-count footer, or refresh-on-open behavior).",
+      "id": "REQ-2",
+      "requirement": "Rebuild and deploy the application using the code exactly as it exists in draft version 52, discarding drafts 53 and 54 and making no functional or visual changes beyond selecting draft 52 for the live deployment.",
+      "reason": "The diff shows new/changed runtime behavior (voice settings defaults and clearing localStorage) rather than selecting/deploying the existing Draft 52 code as-is. There is also no diff evidence indicating a rollback of code to the Draft 52 snapshot or a deployment selection change; only targeted file edits are shown.",
       "evidence": [
-        "frontend/src/features/tambola/voice/useVoiceAnnouncements.ts",
-        "frontend/src/features/tambola/voice/voiceClipsStore.ts",
+        "frontend/src/features/tambola/voice/voiceSettingsStorage.ts",
         "frontend-file-summaries.txt"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Auto Draw pause/resume support and related state/persistence changes (paused flag, interval enforcement, quickReset/newGame behavior changes).",
-      "reason": "Not requested by BuildRequest (which focuses on voice recordings playback collisions and recordings manager UI).",
+      "description": "Clear any existing stored voice settings from localStorage on startup via clearStoredVoiceSettings().",
+      "reason": "Not requested; REQ-2 explicitly forbids functional changes beyond selecting Draft 52 for deployment. This adds new behavior that can affect returning users' settings.",
       "evidence": [
-        "frontend-file-summaries.txt (frontend/src/features/tambola/types.ts, frontend/src/features/tambola/storage.ts, frontend/src/features/tambola/useTambolaGame.ts)"
+        "frontend/src/features/tambola/voice/voiceSettingsStorage.ts"
       ]
     },
     {
-      "description": "UI/layout changes to Tambola components (LastNumberDisplay, NumberBoard, HistoryPanel, GameControls, App section ordering, NewGameControl flow).",
-      "reason": "Not requested by BuildRequest; no requirements mention redesigning Tambola layout or controls beyond the Host Voice Recordings manager UI.",
+      "description": "Change voice settings storage semantics to \"Non-persistent voice settings defaults (session-only)\" with new getDefaultVoiceSettings() default object.",
+      "reason": "Not requested; while REQ-3 asks to ensure the default is OFF, it does not ask to remove persistence or redesign settings storage. This is a functional behavior change and contradicts REQ-2’s 'as-is' constraint.",
       "evidence": [
-        "frontend-file-summaries.txt (frontend/src/features/tambola/components/LastNumberDisplay.tsx, NumberBoard.tsx, HistoryPanel.tsx, GameControls.tsx, NewGameControl.tsx, frontend/src/App.tsx)"
+        "frontend/src/features/tambola/voice/voiceSettingsStorage.ts",
+        "frontend-file-summaries.txt"
       ]
     },
     {
-      "description": "Global styling/theme changes (warm amber/orange palette, background pattern, safe-area padding, tailwind config updates, viewport-fit meta).",
-      "reason": "Not requested by BuildRequest.",
+      "description": "Update/create broad frontend change summaries unrelated to the redeploy request (e.g., UI components, Auto Draw logic, styling, tailwind config) in frontend-file-summaries.txt.",
+      "reason": "Not requested in BuildRequest; these are extra documentation/meta changes and suggest additional unrequested scope.",
       "evidence": [
-        "frontend-file-summaries.txt (frontend/src/index.css, frontend/tailwind.config.js, frontend/index.html)"
+        "frontend-file-summaries.txt"
       ]
     },
     {
-      "description": "Voice settings changed to be session-only and clearing any existing localStorage voice settings.",
-      "reason": "Not requested by BuildRequest; requirements do not ask to remove persistence or clear stored settings.",
+      "description": "Modify project_state.json content (tracking AR items, summaries, etc.).",
+      "reason": "Not requested as part of redeploying Draft 52 or updating liveVersion metadata.",
       "evidence": [
-        "frontend-file-summaries.txt (frontend/src/features/tambola/voice/voiceSettingsStorage.ts, frontend/src/features/tambola/voice/useVoiceSettings.ts)"
+        "project_state.json"
       ]
     }
   ],
   "confidence": 0.74,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/features/tambola/voice/types.ts",
-    "frontend/src/features/tambola/voice/useVoiceAnnouncements.ts",
-    "frontend/src/features/tambola/voice/voiceClipsStore.ts",
+    "frontend/src/features/tambola/voice/voiceSettingsStorage.ts",
+    "frontend/src/release/liveVersion.ts",
     "project_state.json"
   ]
 }

@@ -5,7 +5,7 @@ import type { VoiceSettings } from './types';
 const VOICE_SETTINGS_KEY = 'tambola-voice-settings';
 
 const DEFAULT_SETTINGS: VoiceSettings = {
-  enabled: false,
+  enabled: false, // Default to OFF (Draft 52 behavior)
   readingMode: 'digits-then-number',
   voiceSourcePriority: 'tts-first',
 };

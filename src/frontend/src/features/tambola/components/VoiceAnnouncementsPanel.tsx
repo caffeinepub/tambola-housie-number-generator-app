@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Settings, AlertCircle, Loader2 } from 'lucide-react';
+import { Settings, AlertCircle, Loader2, Info } from 'lucide-react';
 import type { ReadingMode, VoiceSourcePriority } from '../voice/types';
 import type { VoiceUnlockStatus } from '../voice/useWebViewVoiceUnlock';
 import type { AnnouncementStatus } from '../voice/useVoiceAnnouncements';
@@ -117,10 +117,18 @@ export function VoiceAnnouncementsPanel({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="tts-first">Text-to-Speech First</SelectItem>
-                  <SelectItem value="recording-first">Host Recording First</SelectItem>
+                  <SelectItem value="tts-first">Text-to-Speech</SelectItem>
+                  <SelectItem value="recording-first">Host Recording</SelectItem>
                 </SelectContent>
               </Select>
+              {voiceSourcePriority === 'recording-first' && (
+                <div className="p-2 bg-muted/50 rounded-md">
+                  <p className="text-xs text-muted-foreground flex items-start gap-2">
+                    <Info className="h-3 w-3 flex-shrink-0 mt-0.5" />
+                    <span>When a recording exists for a number, TTS is disabled and only the recording plays.</span>
+                  </p>
+                </div>
+              )}
             </div>
 
             <Button
