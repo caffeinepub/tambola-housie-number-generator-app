@@ -97,11 +97,67 @@ export async function getVoiceMatchStatus(): Promise<{ hasExactMatch: boolean; s
   return { hasExactMatch, selectedVoice: voice };
 }
 
-// Speak text using SpeechSynthesis with English-only voice
-export async function speakText(text: string): Promise<void> {
+// Prime voices for WebView initialization (exported for useWebViewVoiceUnlock)
+export async function primeVoices(): Promise<void> {
+  if (!isTTSAvailable()) {
+    throw new Error('SpeechSynthesis not supported');
+  }
+  await ensureVoicesLoaded();
+}
+
+// Warm-up speak for WebView initialization (exported for useWebViewVoiceUnlock)
+export async function warmUpSpeech(): Promise<void> {
+  if (!isTTSAvailable()) {
+    throw new Error('SpeechSynthesis not supported');
+  }
+
+  await ensureVoicesLoaded();
+
+  return new Promise((resolve, reject) => {
+    const utterance = new SpeechSynthesisUtterance('');
+    
+    const voice = selectEnglishVoice();
+    if (voice) {
+      utterance.voice = voice;
+      utterance.lang = voice.lang;
+    } else {
+      utterance.lang = 'en-IN';
+    }
+
+    utterance.volume = 0.01; // Nearly silent
+    utterance.rate = 2.0; // Fast
+
+    const timeout = setTimeout(() => {
+      window.speechSynthesis.cancel();
+      resolve();
+    }, 500);
+
+    utterance.onend = () => {
+      clearTimeout(timeout);
+      resolve();
+    };
+
+    utterance.onerror = () => {
+      clearTimeout(timeout);
+      resolve(); // Don't reject on warm-up failure
+    };
+
+    try {
+      window.speechSynthesis.speak(utterance);
+    } catch (error) {
+      clearTimeout(timeout);
+      resolve();
+    }
+  });
+}
+
+export type TTSAttemptResult = 'success' | 'silent-failure' | 'error';
+
+// Speak text using SpeechSynthesis with English-only voice and failure detection
+export async function speakText(text: string): Promise<TTSAttemptResult> {
   if (!isTTSAvailable()) {
     console.warn('SpeechSynthesis not supported');
-    return;
+    return 'error';
   }
 
   // Ensure voices are loaded
@@ -120,35 +176,61 @@ export async function speakText(text: string): Promise<void> {
       utterance.lang = voice.lang;
     } else {
       // No English voice available - set English lang hint anyway
-      // Prefer en-IN, fallback to en-US
       utterance.lang = 'en-IN';
     }
 
-    utterance.rate = 0.9; // Slightly slower for clarity
+    utterance.rate = 0.9;
     utterance.pitch = 1.0;
     utterance.volume = 1.0;
 
+    let started = false;
+    let resolved = false;
+
+    // Timeout to detect silent failures
+    const timeout = setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
+        window.speechSynthesis.cancel();
+        resolve(started ? 'success' : 'silent-failure');
+      }
+    }, 5000);
+
+    utterance.onstart = () => {
+      started = true;
+    };
+
     utterance.onend = () => {
-      resolve();
+      if (!resolved) {
+        resolved = true;
+        clearTimeout(timeout);
+        resolve('success');
+      }
     };
 
     utterance.onerror = (event) => {
-      console.error('Speech synthesis error:', event);
-      // Don't reject - resolve to continue sequence
-      resolve();
+      if (!resolved) {
+        resolved = true;
+        clearTimeout(timeout);
+        console.error('Speech synthesis error:', event);
+        resolve('error');
+      }
     };
 
     try {
       window.speechSynthesis.speak(utterance);
     } catch (error) {
-      console.error('Failed to speak:', error);
-      resolve();
+      if (!resolved) {
+        resolved = true;
+        clearTimeout(timeout);
+        console.error('Failed to speak:', error);
+        resolve('error');
+      }
     }
   });
 }
 
 // Speak a number
-export async function speakNumber(number: number): Promise<void> {
+export async function speakNumber(number: number): Promise<TTSAttemptResult> {
   return speakText(number.toString());
 }
 

@@ -1,13 +1,17 @@
-// Voice announcement controller with mixed playback step support (numeric and text) - English only
+// Voice announcement controller with exact number-matched playback - English only
 
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import type { ReadingMode, VoiceSourcePriority, PlaybackStep } from './types';
-import { speakText } from './tts';
+import { speakText, type TTSAttemptResult } from './tts';
 import { loadClip } from './voiceClipsStore';
 import { playAudioBlob } from './voiceAudio';
 
+export type AnnouncementStatus = 'idle' | 'playing' | 'tts-failing';
+
 export function useVoiceAnnouncements() {
   const isPlayingRef = useRef(false);
+  const [status, setStatus] = useState<AnnouncementStatus>('idle');
+  const failureCountRef = useRef(0);
 
   const announceNumber = useCallback(
     async (
@@ -21,57 +25,91 @@ export function useVoiceAnnouncements() {
       }
 
       isPlayingRef.current = true;
+      setStatus('playing');
 
       try {
         // Build playback sequence based on reading mode
         const steps: PlaybackStep[] = [];
 
         if (number >= 1 && number <= 9) {
-          // For single digits: split into two steps for English-only TTS
-          // Step 1: "single number" (text phrase)
-          steps.push({ text: 'single number' });
-          // Step 2: the digit itself (numeric)
-          steps.push(number);
+          // For single digits: announce "single number" phrase, then the digit as full-number
+          steps.push({ type: 'text', text: 'single number' });
+          steps.push({ type: 'full-number', value: number });
         } else if (readingMode === 'digits-then-number') {
           // For multi-digit numbers in digits-then-number mode:
-          // Split into individual digits, then say the full number
+          // 1. Speak each digit individually (TTS-only, no recordings)
+          // 2. Then speak the full number (eligible for recordings)
           const digits = number.toString().split('');
-          digits.forEach((digit) => steps.push(parseInt(digit, 10)));
-          steps.push(number);
+          digits.forEach((digit) => {
+            steps.push({ type: 'digit', value: parseInt(digit, 10) });
+          });
+          steps.push({ type: 'full-number', value: number });
         } else {
-          // For multi-digit numbers in single mode: just say the number
-          steps.push(number);
+          // For multi-digit numbers in single mode: just the full number
+          steps.push({ type: 'full-number', value: number });
         }
+
+        let hadTTSFailure = false;
 
         // Play each step in sequence with per-step fallback
         for (const step of steps) {
-          if (typeof step === 'number') {
-            // Numeric step: try recording first or TTS first based on priority
+          if (step.type === 'text') {
+            // Text phrase: always use TTS
+            const result = await speakText(step.text);
+            if (result !== 'success') {
+              hadTTSFailure = true;
+            }
+          } else if (step.type === 'digit') {
+            // Digit step: always use TTS (never check recordings)
+            const result = await speakText(step.value.toString());
+            if (result !== 'success') {
+              hadTTSFailure = true;
+            }
+          } else if (step.type === 'full-number') {
+            // Full-number step: eligible for recordings based on priority
             if (voiceSourcePriority === 'recording-first') {
               try {
-                const blob = await loadClip(step);
+                const blob = await loadClip(step.value);
                 if (blob) {
                   await playAudioBlob(blob);
                 } else {
-                  // No recording, use TTS (English-only)
-                  await speakText(step.toString());
+                  // No recording, use TTS
+                  const result = await speakText(step.value.toString());
+                  if (result !== 'success') {
+                    hadTTSFailure = true;
+                  }
                 }
               } catch (error) {
-                // Recording playback failed, fallback to TTS (English-only)
-                console.log(`Recording for ${step} failed, using TTS fallback`);
-                await speakText(step.toString());
+                // Recording playback failed, fallback to TTS
+                console.log(`Recording for ${step.value} failed, using TTS fallback`);
+                const result = await speakText(step.value.toString());
+                if (result !== 'success') {
+                  hadTTSFailure = true;
+                }
               }
             } else {
-              // TTS first (English-only)
-              await speakText(step.toString());
+              // TTS first
+              const result = await speakText(step.value.toString());
+              if (result !== 'success') {
+                hadTTSFailure = true;
+              }
             }
-          } else {
-            // Text phrase step: always use TTS (English-only)
-            await speakText(step.text);
           }
+        }
+
+        // Track TTS failures
+        if (hadTTSFailure) {
+          failureCountRef.current += 1;
+          if (failureCountRef.current >= 2) {
+            setStatus('tts-failing');
+          }
+        } else {
+          failureCountRef.current = 0;
+          setStatus('idle');
         }
       } catch (error) {
         console.error('Voice announcement error:', error);
+        setStatus('idle');
       } finally {
         isPlayingRef.current = false;
       }
@@ -79,5 +117,5 @@ export function useVoiceAnnouncements() {
     []
   );
 
-  return { announceNumber };
+  return { announceNumber, status };
 }

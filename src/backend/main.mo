@@ -1,4 +1,1 @@
-
-
-
-actor {};
+actor {}

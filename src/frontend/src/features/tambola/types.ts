@@ -9,6 +9,7 @@ export interface TambolaGameState {
 export interface AutoDrawSettings {
   enabled: boolean;
   intervalSeconds: number;
+  paused: boolean;
 }
 
 export interface PersistedState {

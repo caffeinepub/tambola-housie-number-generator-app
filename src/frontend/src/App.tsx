@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { NumberBoard } from './features/tambola/components/NumberBoard';
 import { HistorySection } from './features/tambola/components/HistorySection';
 import { GameControls } from './features/tambola/components/GameControls';
@@ -9,6 +9,7 @@ import { VerifyCalledNumbers } from './features/tambola/components/VerifyCalledN
 import { useTambolaGame } from './features/tambola/useTambolaGame';
 import { useVoiceSettings } from './features/tambola/voice/useVoiceSettings';
 import { useVoiceAnnouncements } from './features/tambola/voice/useVoiceAnnouncements';
+import { useWebViewVoiceUnlock } from './features/tambola/voice/useWebViewVoiceUnlock';
 import { Dices, Heart } from 'lucide-react';
 
 function App() {
@@ -16,13 +17,12 @@ function App() {
     gameState,
     autoDrawSettings,
     drawNext,
-    undoLastDraw,
     quickReset,
     newGame,
     setAutoDrawEnabled,
     setAutoDrawInterval,
+    toggleAutoDrawPause,
     canDraw,
-    canUndo,
     lastAction,
   } = useTambolaGame();
 
@@ -33,33 +33,73 @@ function App() {
     setVoiceSourcePriority,
   } = useVoiceSettings();
 
-  const { announceNumber } = useVoiceAnnouncements();
+  const { announceNumber, status: announcementStatus } = useVoiceAnnouncements();
+  const { status: voiceUnlockStatus, initialize: initializeVoice, reset: resetVoiceUnlock } = useWebViewVoiceUnlock();
   const [isVoiceManagerOpen, setIsVoiceManagerOpen] = useState(false);
 
+  // Refs to track last announced state
+  const lastAnnouncedNumberRef = useRef<number | null>(null);
+  const lastAnnouncedActionRef = useRef<string | null>(null);
+
   const handleDraw = () => {
-    drawNext();
+    // If Auto Draw is ON, perform one draw and then turn it OFF
+    if (autoDrawSettings.enabled) {
+      drawNext();
+      setAutoDrawEnabled(false);
+    } else {
+      drawNext();
+    }
   };
 
   const handleNewGame = () => {
     newGame();
   };
 
-  // Trigger voice announcement when a number is drawn (manual or auto)
-  // Only announce on 'draw' action, not on 'undo' or 'reset'
-  const prevLastNumberRef = useState<number | null>(null);
-  const prevLastActionRef = useState<string | null>(null);
+  const handleQuickReset = () => {
+    quickReset();
+  };
 
-  if (
-    gameState.lastDrawn !== null &&
-    gameState.lastDrawn !== prevLastNumberRef[0] &&
-    lastAction === 'draw' &&
-    lastAction !== prevLastActionRef[0] &&
-    voiceSettings.enabled
-  ) {
-    announceNumber(gameState.lastDrawn, voiceSettings.readingMode, voiceSettings.voiceSourcePriority);
-    prevLastNumberRef[0] = gameState.lastDrawn;
-    prevLastActionRef[0] = lastAction;
-  }
+  // Handle voice toggle with auto-initialization
+  const handleVoiceToggle = async (enabled: boolean) => {
+    setVoiceEnabled(enabled);
+    
+    if (enabled) {
+      // When turning ON, immediately trigger initialization
+      await initializeVoice();
+    } else {
+      // When turning OFF, reset the unlock state so it can be re-initialized later
+      resetVoiceUnlock();
+    }
+  };
+
+  // Effect to trigger voice announcement when a number is drawn
+  useEffect(() => {
+    // Only announce if:
+    // 1. Voice is enabled
+    // 2. Voice is ready (initialized)
+    // 3. There's a newly drawn number
+    // 4. The action is 'draw' (not 'undo' or 'reset')
+    // 5. We haven't already announced this number+action combination
+    if (
+      voiceSettings.enabled &&
+      voiceUnlockStatus === 'ready' &&
+      gameState.lastDrawn !== null &&
+      lastAction === 'draw' &&
+      (gameState.lastDrawn !== lastAnnouncedNumberRef.current || lastAction !== lastAnnouncedActionRef.current)
+    ) {
+      announceNumber(gameState.lastDrawn, voiceSettings.readingMode, voiceSettings.voiceSourcePriority);
+      lastAnnouncedNumberRef.current = gameState.lastDrawn;
+      lastAnnouncedActionRef.current = lastAction;
+    }
+  }, [
+    voiceSettings.enabled,
+    voiceSettings.readingMode,
+    voiceSettings.voiceSourcePriority,
+    voiceUnlockStatus,
+    gameState.lastDrawn,
+    lastAction,
+    announceNumber,
+  ]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -77,7 +117,13 @@ function App() {
               </div>
             </div>
             <div className="w-full sm:w-auto flex-shrink-0">
-              <NewGameControl onNewGame={handleNewGame} />
+              <NewGameControl
+                onNewGame={handleNewGame}
+                onQuickReset={handleQuickReset}
+                calledNumbersCount={gameState.calledNumbers.length}
+                remainingPoolCount={gameState.remainingPool.length}
+                isComplete={gameState.isComplete}
+              />
             </div>
           </div>
         </div>
@@ -92,6 +138,9 @@ function App() {
               calledNumbers={gameState.calledNumbers}
               lastDrawn={gameState.lastDrawn}
               isComplete={gameState.isComplete}
+              autoDrawEnabled={autoDrawSettings.enabled}
+              autoDrawPaused={autoDrawSettings.paused}
+              onTogglePause={toggleAutoDrawPause}
             />
           </div>
 
@@ -102,10 +151,12 @@ function App() {
               isComplete={gameState.isComplete}
               autoDrawEnabled={autoDrawSettings.enabled}
               autoDrawInterval={autoDrawSettings.intervalSeconds}
+              voiceEnabled={voiceSettings.enabled}
               onDrawNext={handleDraw}
               onQuickReset={quickReset}
               onAutoDrawToggle={setAutoDrawEnabled}
               onIntervalChange={setAutoDrawInterval}
+              onVoiceToggle={handleVoiceToggle}
             />
           </div>
 
@@ -114,50 +165,51 @@ function App() {
             <NumberBoard calledNumbers={gameState.calledNumbers} />
           </div>
 
-          {/* Voice Announcements Panel - order-4 on mobile, lg:order-2 on desktop (left column, middle) */}
+          {/* Verify Called Numbers - order-4 on mobile, lg:order-2 on desktop (left column, middle) */}
           <div className="order-4 lg:order-2">
+            <VerifyCalledNumbers calledNumbers={gameState.calledNumbers} />
+          </div>
+
+          {/* Voice Announcements Panel - order-5 on mobile, lg:order-5 on desktop (left column, bottom) */}
+          <div className="order-5 lg:order-5">
             <VoiceAnnouncementsPanel
               voiceEnabled={voiceSettings.enabled}
               readingMode={voiceSettings.readingMode}
               voiceSourcePriority={voiceSettings.voiceSourcePriority}
-              onVoiceToggle={setVoiceEnabled}
+              voiceUnlockStatus={voiceUnlockStatus}
+              announcementStatus={announcementStatus}
               onReadingModeChange={setReadingMode}
               onVoiceSourcePriorityChange={setVoiceSourcePriority}
               onOpenVoiceManager={() => setIsVoiceManagerOpen(true)}
+              onInitializeVoice={initializeVoice}
             />
-          </div>
-
-          {/* Verify Called Numbers - order-5 on mobile (last), lg:order-5 on desktop (left column, bottom) */}
-          <div className="order-5 lg:order-5">
-            <VerifyCalledNumbers calledNumbers={gameState.calledNumbers} />
           </div>
         </div>
       </main>
 
       {/* Footer */}
       <footer className="border-t bg-card/30 backdrop-blur-sm mt-auto">
-        <div className="container mx-auto px-2 sm:px-4 py-4">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 text-sm text-muted-foreground">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-sm text-muted-foreground">
             <span>© 2026. Built with</span>
             <Heart className="h-4 w-4 text-red-500 fill-red-500" />
-            <span>using</span>
-            <a
-              href="https://caffeine.ai"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold text-primary hover:underline"
-            >
-              caffeine.ai
-            </a>
+            <span>
+              using{' '}
+              <a
+                href="https://caffeine.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline font-medium"
+              >
+                caffeine.ai
+              </a>
+            </span>
           </div>
         </div>
       </footer>
 
-      {/* Voice Manager Dialog */}
-      <HostVoiceManagerDialog
-        open={isVoiceManagerOpen}
-        onOpenChange={setIsVoiceManagerOpen}
-      />
+      {/* Host Voice Manager Dialog */}
+      <HostVoiceManagerDialog open={isVoiceManagerOpen} onOpenChange={setIsVoiceManagerOpen} />
     </div>
   );
 }

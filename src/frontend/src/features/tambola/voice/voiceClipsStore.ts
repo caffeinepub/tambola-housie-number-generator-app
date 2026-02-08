@@ -1,4 +1,4 @@
-// IndexedDB storage for host-recorded voice clips (1-90)
+// IndexedDB storage for host-recorded voice clips (1-90) - full numbers only
 
 const DB_NAME = 'tambola-voice-clips';
 const DB_VERSION = 1;
@@ -33,7 +33,15 @@ function openDB(): Promise<IDBDatabase> {
   });
 }
 
+/**
+ * Save a voice clip for a full number (1-90).
+ * This should only be called for complete numbers, never for individual digits.
+ */
 export async function saveClip(number: number, blob: Blob): Promise<void> {
+  if (number < 1 || number > 90) {
+    throw new Error(`Invalid number ${number}: must be between 1 and 90`);
+  }
+  
   const db = await openDB();
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([STORE_NAME], 'readwrite');
@@ -46,7 +54,15 @@ export async function saveClip(number: number, blob: Blob): Promise<void> {
   });
 }
 
+/**
+ * Load a voice clip for a full number (1-90).
+ * This should only be called for complete numbers, never for individual digits.
+ */
 export async function loadClip(number: number): Promise<Blob | null> {
+  if (number < 1 || number > 90) {
+    return null; // Invalid range, no clip available
+  }
+  
   const db = await openDB();
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([STORE_NAME], 'readonly');

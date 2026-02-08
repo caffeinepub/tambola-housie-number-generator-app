@@ -1,18 +1,24 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "App deployed to production (Version 35); requested UI cleanup to remove outdated “Draft 34” text from the footer.",
+  "summary": "Voice-recording app with a 1–90 numbered interface, where each number’s recording plays back only for that exact number (no partial/substring matches).",
   "architectural_notes": [],
-  "known_issues": [
-    "Footer displays outdated static text “Draft 34” even after publishing Version 35 (user requested removal)"
-  ],
-  "isFixRequest": true,
+  "known_issues": [],
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-remove-only-the-footer-text-that-displays-draft-34-the-live-version-label-while-keeping-the-rest-of-the-footer-content-and-layout-unchanged",
-      "title": "Remove only the footer text that displays “Draft 34” (the live version label) while keeping the rest of the footer content and layout unchanged.",
+      "id": "feature-ensure-host-recorded-audio-clips-are-only-used-for-the-exact-selected-drawn-number-1-90-and-never-unintentionally-triggered-for-other-numbers-e-g-clip-for-1-must-not-play-when-announcing-12-13-41-etc",
+      "title": "Ensure host-recorded audio clips are only used for the exact selected/drawn number (1–90) and never unintentionally triggered for other numbers (e.g., clip for 1 must not play when announcing 12, 13, 41, etc.).",
       "reqIds": [
         "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-voice-announcement-playback-sequencing-so-that-in-digits-then-number-reading-mode-digit-steps-always-use-tts-never-host-recordings-while-the-final-full-number-step-may-use-host-recordings-according-to-the-selected-voice-source-priority",
+      "title": "Update the voice announcement playback sequencing so that in “digits-then-number” reading mode, digit steps always use TTS (never host recordings), while the final full-number step may use host recordings according to the selected voice source priority.",
+      "reqIds": [
+        "REQ-2"
       ],
       "version": 1
     }
@@ -20,12 +26,26 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Remove only the “Draft 34” text line from the footer while keeping the rest unchanged",
+      "summary": "Build voice-recording UI for numbers 1–90 (record/play controls per number)",
       "reqIds": [],
-      "status": "in_progress"
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Ensure playback matches the exact selected number only (e.g., 1 does not match 12/13/41); apply to all 1–90",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Keep (or recreate if missing) a “Host Voice Recordings” manager UI matching the uploaded screenshot: a dialog titled “Host Voice Recordings” with instructions, a scrollable 1–90 grid, per-number record/stop controls, and per-number play/delete controls when a recording exists, plus a recorded count badge and close button.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
     }
   ],
-  "projectName": "Remove “Draft 34” version label from footer",
+  "projectName": "Host voice recordings: exact number-matched playback (no digit/substring collisions)",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

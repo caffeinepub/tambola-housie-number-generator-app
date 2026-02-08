@@ -14,18 +14,49 @@ import { RotateCcw } from 'lucide-react';
 
 interface NewGameControlProps {
   onNewGame: () => void;
+  onQuickReset: () => void;
+  calledNumbersCount: number;
+  remainingPoolCount: number;
+  isComplete: boolean;
 }
 
-export function NewGameControl({ onNewGame }: NewGameControlProps) {
-  const [dialogOpen, setDialogOpen] = useState(false);
+export function NewGameControl({
+  onNewGame,
+  onQuickReset,
+  calledNumbersCount,
+  remainingPoolCount,
+  isComplete,
+}: NewGameControlProps) {
+  const [incompleteDialogOpen, setIncompleteDialogOpen] = useState(false);
+  const [newGameDialogOpen, setNewGameDialogOpen] = useState(false);
 
   const handleClick = () => {
-    setDialogOpen(true);
+    const isBoardIncomplete = calledNumbersCount > 0 && remainingPoolCount > 0 && !isComplete;
+    
+    if (isBoardIncomplete) {
+      setIncompleteDialogOpen(true);
+    } else {
+      setNewGameDialogOpen(true);
+    }
   };
 
-  const handleConfirm = () => {
+  const handleIncompleteYes = () => {
+    setIncompleteDialogOpen(false);
+    onQuickReset();
+    setNewGameDialogOpen(true);
+  };
+
+  const handleIncompleteNo = () => {
+    setIncompleteDialogOpen(false);
+  };
+
+  const handleNewGameConfirm = () => {
+    setNewGameDialogOpen(false);
     onNewGame();
-    setDialogOpen(false);
+  };
+
+  const handleNewGameCancel = () => {
+    setNewGameDialogOpen(false);
   };
 
   return (
@@ -40,7 +71,24 @@ export function NewGameControl({ onNewGame }: NewGameControlProps) {
         New Game
       </Button>
 
-      <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      {/* Board Incomplete Warning Dialog */}
+      <AlertDialog open={incompleteDialogOpen} onOpenChange={setIncompleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Board Incomplete</AlertDialogTitle>
+            <AlertDialogDescription>
+              The board is incomplete. Do you want to reset the game first?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleIncompleteNo}>No</AlertDialogCancel>
+            <AlertDialogAction onClick={handleIncompleteYes}>Yes</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* New Game Confirmation Dialog */}
+      <AlertDialog open={newGameDialogOpen} onOpenChange={setNewGameDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>New Game</AlertDialogTitle>
@@ -49,8 +97,8 @@ export function NewGameControl({ onNewGame }: NewGameControlProps) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>No</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirm}>Yes</AlertDialogAction>
+            <AlertDialogCancel onClick={handleNewGameCancel}>No</AlertDialogCancel>
+            <AlertDialogAction onClick={handleNewGameConfirm}>Yes</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

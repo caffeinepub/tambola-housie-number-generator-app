@@ -1,39 +1,56 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T15:32:59.859Z",
-  "summary": "The BuildRequest only asked to remove the “Draft 34” label from the footer without changing anything else. The diff summary does not provide direct code evidence that the footer text/bullet were updated, and it shows substantial unrelated application logic changes in App.tsx plus metadata changes in project_state.json.",
+  "generatedAt": "2026-02-08T18:19:30.458Z",
+  "summary": "Diff implements exact-number clip lookup via IndexedDB keyed by full number and updates announcement sequencing to ensure digit steps use TTS and only the final full-number step is recording-eligible. However, the requested “Host Voice Recordings” manager dialog UI (grid/controls/badge/refresh-on-open) is not evidenced in the provided diff summary. Several unrelated Tambola UI/AutoDraw/theme changes appear that were not requested.",
   "missing_requirements": [
     {
-      "id": "REQ-1",
-      "requirement": "Remove only the footer text that displays “Draft 34” (the live version label) while keeping the rest of the footer content and layout unchanged (including no leftover separator/bullet).",
-      "reason": "The provided App.tsx diff is truncated before any footer rendering, so there is no direct evidence in the diff snippet that “Draft 34” was removed and that no extra separator (e.g., “•”) remains. The file summary text claims removal, but the verifier is constrained to evidence from the diff snippet.",
+      "id": "REQ-3",
+      "requirement": "Keep (or recreate if missing) a “Host Voice Recordings” manager UI matching the screenshot: dialog titled “Host Voice Recordings” with instructions, scrollable 1–90 grid, per-number record/stop controls, and per-number play/delete controls when recording exists, recorded count badge, and Close button; opening refreshes list from storage.",
+      "reason": "The diff summary shows changes to voice announcement logic and an IndexedDB clip store, but does not show any dialog/UI component implementation for managing recordings (no evidence of a dialog, grid UI, record/stop/play/delete controls, recorded-count footer, or refresh-on-open behavior).",
       "evidence": [
-        "frontend/src/App.tsx (truncated)"
+        "frontend/src/features/tambola/voice/useVoiceAnnouncements.ts",
+        "frontend/src/features/tambola/voice/voiceClipsStore.ts",
+        "frontend-file-summaries.txt"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Added/changed Tambola voice-announcement triggering logic (tracking lastAction, preventing announcements on undo/reset, English-only TTS routing) and related state handling in the main App component.",
-      "reason": "Not requested by the BuildRequest, which only asked to remove a specific footer label without other UI/logic changes.",
+      "description": "Auto Draw pause/resume support and related state/persistence changes (paused flag, interval enforcement, quickReset/newGame behavior changes).",
+      "reason": "Not requested by BuildRequest (which focuses on voice recordings playback collisions and recordings manager UI).",
       "evidence": [
-        "frontend/src/App.tsx (truncated)",
-        "frontend-file-summaries.txt (mentions voice announcement controller changes)"
+        "frontend-file-summaries.txt (frontend/src/features/tambola/types.ts, frontend/src/features/tambola/storage.ts, frontend/src/features/tambola/useTambolaGame.ts)"
       ]
     },
     {
-      "description": "Updated project metadata to mention “App deployed to production (Version 35)” and added new_feature_requests entries (AR-1/AR-2).",
-      "reason": "Not requested by the BuildRequest; it specifically disallowed implementing new versioning/publish workflows and only asked for a footer text removal.",
+      "description": "UI/layout changes to Tambola components (LastNumberDisplay, NumberBoard, HistoryPanel, GameControls, App section ordering, NewGameControl flow).",
+      "reason": "Not requested by BuildRequest; no requirements mention redesigning Tambola layout or controls beyond the Host Voice Recordings manager UI.",
       "evidence": [
-        "project_state.json"
+        "frontend-file-summaries.txt (frontend/src/features/tambola/components/LastNumberDisplay.tsx, NumberBoard.tsx, HistoryPanel.tsx, GameControls.tsx, NewGameControl.tsx, frontend/src/App.tsx)"
+      ]
+    },
+    {
+      "description": "Global styling/theme changes (warm amber/orange palette, background pattern, safe-area padding, tailwind config updates, viewport-fit meta).",
+      "reason": "Not requested by BuildRequest.",
+      "evidence": [
+        "frontend-file-summaries.txt (frontend/src/index.css, frontend/tailwind.config.js, frontend/index.html)"
+      ]
+    },
+    {
+      "description": "Voice settings changed to be session-only and clearing any existing localStorage voice settings.",
+      "reason": "Not requested by BuildRequest; requirements do not ask to remove persistence or clear stored settings.",
+      "evidence": [
+        "frontend-file-summaries.txt (frontend/src/features/tambola/voice/voiceSettingsStorage.ts, frontend/src/features/tambola/voice/useVoiceSettings.ts)"
       ]
     }
   ],
-  "confidence": 0.62,
+  "confidence": 0.74,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
+    "frontend/src/features/tambola/voice/types.ts",
+    "frontend/src/features/tambola/voice/useVoiceAnnouncements.ts",
+    "frontend/src/features/tambola/voice/voiceClipsStore.ts",
     "project_state.json"
   ]
 }

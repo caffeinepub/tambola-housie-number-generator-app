@@ -71,50 +71,73 @@ export function useTambolaGame() {
     }
   }, []);
 
-  // Quick Reset - resets game state only, preserves interval setting
+  // Quick Reset - clears board only, disables Auto Draw, and does not draw any numbers
   const quickReset = useCallback(() => {
+    stopAutoDrawTimer();
     setGameState(createInitialGameState());
     setAutoDrawSettings((prev) => ({
       ...prev,
-      enabled: false,
+      enabled: false, // Disable Auto Draw on reset
+      paused: false,
     }));
-    stopAutoDrawTimer();
     setLastAction('reset');
-    // Persist the new state
-    savePersistedState({
-      gameState: createInitialGameState(),
-      autoDrawSettings: {
-        enabled: false,
-        intervalSeconds: autoDrawSettings.intervalSeconds,
-      },
-    });
-  }, [autoDrawSettings.intervalSeconds, stopAutoDrawTimer]);
+  }, [stopAutoDrawTimer]);
 
-  // New Game - resets everything to initial defaults
+  // New Game - resets everything and draws the first number
   const newGame = useCallback(() => {
-    setGameState(createInitialGameState());
-    setAutoDrawSettings(createInitialAutoDrawSettings());
+    // Stop any active auto-draw timer
     stopAutoDrawTimer();
-    setLastAction('new-game');
-    // Persist the new state
-    savePersistedState({
-      gameState: createInitialGameState(),
-      autoDrawSettings: createInitialAutoDrawSettings(),
-    });
+    
+    // Create fresh initial state
+    const freshGameState = createInitialGameState();
+    const freshAutoDrawSettings = createInitialAutoDrawSettings();
+    
+    // Draw the first number from the fresh pool
+    const randomIndex = Math.floor(Math.random() * freshGameState.remainingPool.length);
+    const drawnNumber = freshGameState.remainingPool[randomIndex];
+    
+    const newRemainingPool = freshGameState.remainingPool.filter((_, idx) => idx !== randomIndex);
+    const newCalledNumbers = [drawnNumber];
+    
+    const newGameState: TambolaGameState = {
+      calledNumbers: newCalledNumbers,
+      remainingPool: newRemainingPool,
+      lastDrawn: drawnNumber,
+      isComplete: newRemainingPool.length === 0,
+    };
+    
+    // Update state
+    setGameState(newGameState);
+    setAutoDrawSettings(freshAutoDrawSettings);
+    setLastAction('draw'); // Set to 'draw' so voice announcement triggers
   }, [stopAutoDrawTimer]);
 
   // Update auto-draw settings
   const setAutoDrawEnabled = useCallback((enabled: boolean) => {
-    setAutoDrawSettings((prev) => ({ ...prev, enabled }));
+    // Immediately stop timer if disabling
+    if (!enabled) {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    }
+    // Reset paused state when disabling Auto Draw
+    setAutoDrawSettings((prev) => ({ ...prev, enabled, paused: false }));
   }, []);
 
   const setAutoDrawInterval = useCallback((intervalSeconds: number) => {
     setAutoDrawSettings((prev) => ({ ...prev, intervalSeconds }));
   }, []);
 
+  // Toggle pause/resume for Auto Draw
+  const toggleAutoDrawPause = useCallback(() => {
+    setAutoDrawSettings((prev) => ({ ...prev, paused: !prev.paused }));
+  }, []);
+
   // Auto-draw timer management
   useEffect(() => {
-    if (autoDrawSettings.enabled && !gameState.isComplete) {
+    // Only run timer if Auto Draw is enabled, not paused, and game is not complete
+    if (autoDrawSettings.enabled && !autoDrawSettings.paused && !gameState.isComplete) {
       timerRef.current = setInterval(() => {
         drawNext();
       }, autoDrawSettings.intervalSeconds * 1000);
@@ -126,12 +149,13 @@ export function useTambolaGame() {
         }
       };
     } else {
+      // Clear timer if paused, disabled, or game complete
       if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
       }
     }
-  }, [autoDrawSettings.enabled, autoDrawSettings.intervalSeconds, gameState.isComplete, drawNext]);
+  }, [autoDrawSettings.enabled, autoDrawSettings.paused, autoDrawSettings.intervalSeconds, gameState.isComplete, drawNext]);
 
   // Stop auto-draw when game completes
   useEffect(() => {
@@ -150,6 +174,7 @@ export function useTambolaGame() {
     newGame,
     setAutoDrawEnabled,
     setAutoDrawInterval,
+    toggleAutoDrawPause,
     canDraw: gameState.remainingPool.length > 0,
     canUndo: gameState.calledNumbers.length > 0,
   };

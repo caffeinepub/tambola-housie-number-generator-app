@@ -1,50 +1,76 @@
 {
   "kind": "build_request",
-  "title": "Remove “Draft 34” version label from footer",
+  "title": "Host voice recordings: exact number-matched playback (no digit/substring collisions)",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Remove only the footer text that displays “Draft 34” (the live version label) while keeping the rest of the footer content and layout unchanged.",
+      "text": "Ensure host-recorded audio clips are only used for the exact selected/drawn number (1–90) and never unintentionally triggered for other numbers (e.g., clip for 1 must not play when announcing 12, 13, 41, etc.).",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "Only the line Draft 34 one",
-          "Yes",
-          "Now"
+          "You want the host voice playback to match numbers exactly — for example, recording for 1 should only play for 1 (not 12, 13, 41, etc.), and the same rule should apply for all numbers 1–90."
         ]
       },
       "acceptanceCriteria": [
-        "The footer no longer displays the text “Draft 34” anywhere.",
-        "All other footer elements remain visible and unchanged (© line, heart icon, “using”, and caffeine.ai link).",
-        "No extra separator (e.g., the “•” bullet) is shown if the version label is not rendered."
+        "When announcing 12, a recording saved for 1 is not played as part of the announcement sequence.",
+        "Recordings, if present, are only played for the final/full number being announced (e.g., 12 uses clip 12 if it exists, otherwise uses TTS for 12).",
+        "This behavior applies consistently for all numbers 1–90."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Update the voice announcement playback sequencing so that in “digits-then-number” reading mode, digit steps always use TTS (never host recordings), while the final full-number step may use host recordings according to the selected voice source priority.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "recording for 1 should only play for 1 (not 12, 13, 41, etc.)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "With reading mode set to “digits-then-number” and voice source priority set to “recording-first”, announcing 12 speaks “1” and “2” via TTS and then plays clip 12 if it exists (else TTS for 12).",
+        "With reading mode set to “digits-then-number”, digit steps do not call into recorded-clip lookup/storage at all.",
+        "With reading mode set to “single”, announcing 12 may use clip 12 (if present) according to voice source priority (no regression)."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Keep (or recreate if missing) a “Host Voice Recordings” manager UI matching the uploaded screenshot: a dialog titled “Host Voice Recordings” with instructions, a scrollable 1–90 grid, per-number record/stop controls, and per-number play/delete controls when a recording exists, plus a recorded count badge and close button.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Build"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The dialog displays numbers 1–90 in a grid and supports recording, stopping, playback, and deletion per number.",
+        "A visual indicator shows whether each number has a recording.",
+        "The footer shows “X / 90 recorded” and includes a Close action.",
+        "Opening the dialog refreshes the list of recorded numbers from storage so the UI stays accurate."
       ]
     }
   ],
   "constraints": [
-    "Use English for any user-facing text.",
-    "Do not edit files under frontend/src/components/ui (compose them instead if needed)."
+    "Frontend immutable paths must not be edited: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
+    "Backend must remain single-actor in backend/main.mo; only add migration.mo if persistent backend state is introduced (not required for IndexedDB/localStorage changes).",
+    "Use English for any user-facing text."
   ],
   "nonGoals": [
-    "Do not remove the entire footer.",
-    "Do not change any other footer wording or styling beyond removing the “Draft 34” label.",
-    "Do not implement new versioning/publish workflows."
+    "Adding third-party authentication providers (only Internet Identity is supported).",
+    "Adding external databases or non-Internet-Computer backend services.",
+    "Implementing real-time/multiplayer communication (e.g., WebSockets)."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

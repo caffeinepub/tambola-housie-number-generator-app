@@ -12,6 +12,10 @@ export function initAudioContext() {
 }
 
 export async function unlockAudio(): Promise<void> {
+  if (isUnlocked) {
+    return; // Already unlocked, safe to call multiple times
+  }
+
   const ctx = initAudioContext();
   if (ctx.state === 'suspended') {
     await ctx.resume();

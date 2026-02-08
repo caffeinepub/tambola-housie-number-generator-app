@@ -1,15 +1,17 @@
 // Hook for managing voice settings (enabled toggle + reading mode + voice source priority)
+// Settings are session-only and reset on page reload
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { VoiceSettings, ReadingMode, VoiceSourcePriority } from './types';
-import { loadVoiceSettings, saveVoiceSettings } from './voiceSettingsStorage';
+import { getDefaultVoiceSettings, clearStoredVoiceSettings } from './voiceSettingsStorage';
 
 export function useVoiceSettings() {
-  const [settings, setSettings] = useState<VoiceSettings>(() => loadVoiceSettings());
-
-  useEffect(() => {
-    saveVoiceSettings(settings);
-  }, [settings]);
+  const [settings, setSettings] = useState<VoiceSettings>(() => {
+    // Clear any existing stored settings to ensure clean state
+    clearStoredVoiceSettings();
+    // Always start with defaults (enabled: false)
+    return getDefaultVoiceSettings();
+  });
 
   const setEnabled = (enabled: boolean) => {
     setSettings((prev) => ({ ...prev, enabled }));

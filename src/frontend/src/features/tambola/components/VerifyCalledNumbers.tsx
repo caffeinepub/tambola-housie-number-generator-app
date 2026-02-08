@@ -20,19 +20,16 @@ export function VerifyCalledNumbers({ calledNumbers }: VerifyCalledNumbersProps)
   const [result, setResult] = useState<VerificationResult>({ status: 'idle' });
   const isVerifyingRef = useRef(false);
 
-  // Clear result when calledNumbers changes
   useEffect(() => {
     setResult({ status: 'idle' });
   }, [calledNumbers]);
 
   const handleInputChange = (index: number, value: string) => {
-    // Only allow numbers
     const sanitized = value.replace(/[^0-9]/g, '');
     const newInputs = [...inputs];
     newInputs[index] = sanitized;
     setInputs(newInputs);
     
-    // Reset result on manual input change
     if (!isVerifyingRef.current) {
       setResult({ status: 'idle' });
     }
@@ -41,13 +38,10 @@ export function VerifyCalledNumbers({ calledNumbers }: VerifyCalledNumbersProps)
   const handleVerify = () => {
     isVerifyingRef.current = true;
     
-    // Snapshot current inputs before clearing
     const snapshotInputs = [...inputs];
     
-    // Clear all inputs immediately
     setInputs(Array(15).fill(''));
     
-    // Parse snapshotted inputs into valid numbers
     const enteredNumbers: number[] = [];
     const seen = new Set<number>();
     
@@ -62,14 +56,12 @@ export function VerifyCalledNumbers({ calledNumbers }: VerifyCalledNumbersProps)
       }
     }
 
-    // Validate count
     if (enteredNumbers.length === 0) {
       setResult({ status: 'error', message: 'Please enter at least 1 number.' });
       isVerifyingRef.current = false;
       return;
     }
 
-    // Check if all numbers have been called
     const calledSet = new Set(calledNumbers);
     const notCalled = enteredNumbers.filter(num => !calledSet.has(num));
 
@@ -97,7 +89,6 @@ export function VerifyCalledNumbers({ calledNumbers }: VerifyCalledNumbersProps)
             Enter 1-15 numbers (positions 1-15)
           </Label>
 
-          {/* 15 Input Grid */}
           <div className="grid grid-cols-5 gap-2">
             {inputs.map((value, index) => (
               <div key={index} className="space-y-1">
@@ -118,14 +109,12 @@ export function VerifyCalledNumbers({ calledNumbers }: VerifyCalledNumbersProps)
             ))}
           </div>
 
-          {/* Verify Button */}
           <Button onClick={handleVerify} size="default" className="w-full">
             <Search className="h-4 w-4 mr-2" />
             Verify
           </Button>
         </div>
 
-        {/* Verification Result */}
         {result.status === 'success' && (
           <Alert className="border-green-500/50 bg-green-500/10">
             <CheckCircle2 className="h-4 w-4 text-green-600" />

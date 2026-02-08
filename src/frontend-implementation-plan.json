@@ -1,21 +1,74 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Remove live version label from footer",
+  "title": "Exact number-matched host voice playback (1–90) with digits-then-number TTS-only digits and recordings manager dialog",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Remove the “Draft 34” live version label from the footer while keeping all other footer content and layout unchanged, including removing the adjacent separator.",
+      "summary": "Ensure host recordings are only used for the exact full number being announced (1–90) and never triggered as part of other numbers.",
       "acceptanceCriteria": [
-        "The footer no longer displays the text “Draft 34” anywhere.",
-        "All other footer elements remain visible and unchanged (© line, heart icon, “using”, and caffeine.ai link).",
-        "No extra separator (e.g., the “•” bullet) is shown if the version label is not rendered."
+        "When announcing 12, a recording saved for 1 is not played as part of the announcement sequence.",
+        "Recordings, if present, are only played for the final/full number being announced (e.g., 12 uses clip 12 if it exists, otherwise uses TTS for 12).",
+        "This behavior applies consistently for all numbers 1–90."
       ],
       "file_operations": [
         {
+          "path": "frontend/src/features/tambola/voice/types.ts",
+          "operation": "modify",
+          "description": "Refine PlaybackStep typing to distinguish digit steps vs full-number steps (so recording eligibility can be enforced precisely and cannot collide via substring/digit matching)."
+        },
+        {
+          "path": "frontend/src/features/tambola/voice/useVoiceAnnouncements.ts",
+          "operation": "modify",
+          "description": "Update announcement step construction and playback logic to only attempt recorded-clip playback for the exact full-number step (never for digit steps), ensuring clip lookup keys are always the full number (1–90) and eliminating unintended collisions (e.g., 1 never plays during 12/13/41)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "In digits-then-number mode, force digit steps to always use TTS while allowing recordings only for the final full-number step according to voice source priority.",
+      "acceptanceCriteria": [
+        "With reading mode set to “digits-then-number” and voice source priority set to “recording-first”, announcing 12 speaks “1” and “2” via TTS and then plays clip 12 if it exists (else TTS for 12).",
+        "With reading mode set to “digits-then-number”, digit steps do not call into recorded-clip lookup/storage at all.",
+        "With reading mode set to “single”, announcing 12 may use clip 12 (if present) according to voice source priority (no regression)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/tambola/voice/useVoiceAnnouncements.ts",
+          "operation": "modify",
+          "description": "Implement digits-then-number sequencing so digit steps always route to TTS-only playback (no recorded-clip lookup), while the final full-number step follows the selected VoiceSourcePriority for recording-vs-TTS fallback behavior."
+        },
+        {
+          "path": "frontend/src/features/tambola/voice/voiceClipsStore.ts",
+          "operation": "modify",
+          "description": "Add/adjust a small helper (or clarify existing access pattern) to support full-number-only lookups cleanly (e.g., a dedicated load-by-full-number call site), ensuring no clip-store access is needed for digit steps."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Keep/recreate the “Host Voice Recordings” manager dialog UI with instructions, scrollable 1–90 grid, per-number record/stop and play/delete controls, recorded indicator, recorded count badge, and Close action; refresh recordings list on open.",
+      "acceptanceCriteria": [
+        "The dialog displays numbers 1–90 in a grid and supports recording, stopping, playback, and deletion per number.",
+        "A visual indicator shows whether each number has a recording.",
+        "The footer shows “X / 90 recorded” and includes a Close action.",
+        "Opening the dialog refreshes the list of recorded numbers from storage so the UI stays accurate."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/tambola/components/HostVoiceManagerDialog.tsx",
+          "operation": "modify",
+          "description": "Ensure the Host Voice Recordings dialog matches the screenshot requirements: title, English instructions, scrollable 1–90 grid, per-number record/stop and play/delete controls, recorded indicator, recorded count badge, and Close action; ensure list refresh happens on open and after record/delete. Use shadcn-ui Dialog/Button/ScrollArea/Badge components to provide the dialog structure and controls. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/features/tambola/components/VoiceAnnouncementsPanel.tsx",
+          "operation": "modify",
+          "description": "Confirm the Manage Host Voice Recordings action reliably opens the HostVoiceManagerDialog from within the Voice Announcements settings area, keeping user-facing text in English. Use shadcn-ui Select/Button/Card components to keep UI consistent. Verify the component's usage instructions before implementing."
+        },
+        {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update the footer JSX to stop rendering the LIVE_VERSION value and remove the adjacent separator so the footer content and spacing remain otherwise unchanged."
+          "description": "Verify the HostVoiceManagerDialog remains wired from the main app state (open/onOpenChange) and that opening the manager from VoiceAnnouncementsPanel works without introducing new routes/pages."
         }
       ]
     }

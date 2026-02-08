@@ -10,5 +10,8 @@ export interface VoiceSettings {
   voiceSourcePriority: VoiceSourcePriority;
 }
 
-// Playback step can be either a number (for recordings/TTS) or a text phrase (for TTS-only announcements)
-export type PlaybackStep = number | { text: string };
+// Playback step types to distinguish digit-only steps from full-number steps
+export type PlaybackStep = 
+  | { type: 'text'; text: string }           // TTS-only text phrase
+  | { type: 'digit'; value: number }         // TTS-only digit (0-9)
+  | { type: 'full-number'; value: number };  // Full number (1-90), eligible for recordings

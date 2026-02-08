@@ -1,5 +1,3 @@
-// Host recording/management UI for numbers 1-90
-
 import { useState, useEffect } from 'react';
 import {
   Dialog,
@@ -44,26 +42,22 @@ export function HostVoiceManagerDialog({ open, onOpenChange }: HostVoiceManagerD
   };
 
   const handleStopRecording = async () => {
-    stopRecording();
+    await stopRecording();
     setRecordingNumber(null);
-    // Refresh the list after a short delay to ensure the clip is saved
-    setTimeout(() => {
-      loadRecordedNumbers();
-    }, 100);
+    await loadRecordedNumbers();
   };
 
-  const handlePreview = async (number: number) => {
-    try {
-      setPlayingNumber(number);
-      const clip = await loadClip(number);
-      if (clip) {
-        await playAudioBlob(clip);
+  const handlePlay = async (number: number) => {
+    setPlayingNumber(number);
+    const blob = await loadClip(number);
+    if (blob) {
+      try {
+        await playAudioBlob(blob);
+      } catch (err) {
+        console.error('Playback failed:', err);
       }
-    } catch (error) {
-      console.error('Preview error:', error);
-    } finally {
-      setPlayingNumber(null);
     }
+    setPlayingNumber(null);
   };
 
   const handleDelete = async (number: number) => {
@@ -71,91 +65,83 @@ export function HostVoiceManagerDialog({ open, onOpenChange }: HostVoiceManagerD
     await loadRecordedNumbers();
   };
 
-  const allNumbers = Array.from({ length: 90 }, (_, i) => i + 1);
+  const isRecorded = (number: number) => recordedNumbers.has(number);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[80vh]">
+      <DialogContent className="max-w-2xl max-h-[80vh]">
         <DialogHeader>
-          <DialogTitle>Manage Host Voice Recordings</DialogTitle>
+          <DialogTitle>Host Voice Recordings</DialogTitle>
           <DialogDescription>
-            Record your voice for each number (1-90). These recordings will be played when numbers are drawn.
+            Record your voice for numbers 1-90. Click the microphone to start recording, click stop when done.
           </DialogDescription>
         </DialogHeader>
 
         {error && (
-          <div className="bg-destructive/10 text-destructive px-4 py-2 rounded-md text-sm">
+          <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">
             {error}
           </div>
         )}
 
         <ScrollArea className="h-[500px] pr-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {allNumbers.map((number) => {
-              const hasRecording = recordedNumbers.has(number);
+          <div className="grid grid-cols-5 gap-3">
+            {Array.from({ length: 90 }, (_, i) => i + 1).map((number) => {
+              const recorded = isRecorded(number);
               const isCurrentlyRecording = recordingNumber === number && isRecording;
               const isCurrentlyPlaying = playingNumber === number;
 
               return (
                 <div
                   key={number}
-                  className="border rounded-lg p-4 space-y-3 bg-card"
+                  className="flex flex-col items-center gap-2 p-3 border rounded-lg bg-card"
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold">{number}</span>
-                      {hasRecording ? (
-                        <CheckCircle2 className="h-5 w-5 text-green-600" />
-                      ) : (
-                        <Circle className="h-5 w-5 text-muted-foreground" />
-                      )}
-                    </div>
-                    <Badge variant={hasRecording ? 'default' : 'outline'}>
-                      {hasRecording ? 'Recorded' : 'Missing'}
-                    </Badge>
+                  <div className="flex items-center gap-1">
+                    <span className="text-lg font-semibold">{number}</span>
+                    {recorded ? (
+                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    ) : (
+                      <Circle className="h-4 w-4 text-muted-foreground" />
+                    )}
                   </div>
 
-                  <div className="flex gap-2">
-                    {!isCurrentlyRecording ? (
+                  <div className="flex gap-1">
+                    {!recorded && !isCurrentlyRecording && (
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => handleRecord(number)}
-                        disabled={isRecording || isCurrentlyPlaying}
-                        className="flex-1"
+                        disabled={isRecording}
                       >
-                        <Mic className="h-4 w-4 mr-1" />
-                        Record
+                        <Mic className="h-3 w-3" />
                       </Button>
-                    ) : (
+                    )}
+
+                    {isCurrentlyRecording && (
                       <Button
                         size="sm"
                         variant="destructive"
                         onClick={handleStopRecording}
-                        className="flex-1"
                       >
-                        <Square className="h-4 w-4 mr-1" />
-                        Stop
+                        <Square className="h-3 w-3" />
                       </Button>
                     )}
 
-                    {hasRecording && (
+                    {recorded && !isCurrentlyRecording && (
                       <>
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => handlePreview(number)}
-                          disabled={isRecording || isCurrentlyPlaying}
+                          onClick={() => handlePlay(number)}
+                          disabled={isCurrentlyPlaying}
                         >
-                          <Play className="h-4 w-4" />
+                          <Play className="h-3 w-3" />
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => handleDelete(number)}
-                          disabled={isRecording || isCurrentlyPlaying}
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-3 w-3" />
                         </Button>
                       </>
                     )}
@@ -166,11 +152,13 @@ export function HostVoiceManagerDialog({ open, onOpenChange }: HostVoiceManagerD
           </div>
         </ScrollArea>
 
-        <div className="flex justify-between items-center pt-4 border-t">
-          <div className="text-sm text-muted-foreground">
-            {recordedNumbers.size} of 90 numbers recorded
-          </div>
-          <Button onClick={() => onOpenChange(false)}>Close</Button>
+        <div className="flex items-center justify-between pt-4 border-t">
+          <Badge variant="secondary">
+            {recordedNumbers.size} / 90 recorded
+          </Badge>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Close
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

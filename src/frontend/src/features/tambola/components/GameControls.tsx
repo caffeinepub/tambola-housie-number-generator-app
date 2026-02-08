@@ -14,17 +14,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Play, Pause, SkipForward, RefreshCw } from 'lucide-react';
+import { Play, Pause, SkipForward, RefreshCw, Volume2 } from 'lucide-react';
 
 interface GameControlsProps {
   canDraw: boolean;
   isComplete: boolean;
   autoDrawEnabled: boolean;
   autoDrawInterval: number;
+  voiceEnabled: boolean;
   onDrawNext: () => void;
   onQuickReset: () => void;
   onAutoDrawToggle: (enabled: boolean) => void;
   onIntervalChange: (interval: number) => void;
+  onVoiceToggle: (enabled: boolean) => void;
 }
 
 export function GameControls({
@@ -32,10 +34,12 @@ export function GameControls({
   isComplete,
   autoDrawEnabled,
   autoDrawInterval,
+  voiceEnabled,
   onDrawNext,
   onQuickReset,
   onAutoDrawToggle,
   onIntervalChange,
+  onVoiceToggle,
 }: GameControlsProps) {
   const [quickResetDialogOpen, setQuickResetDialogOpen] = useState(false);
   const [drawCooldown, setDrawCooldown] = useState(0);
@@ -69,12 +73,16 @@ export function GameControls({
   };
 
   const handleQuickResetConfirm = () => {
-    onQuickReset();
     setQuickResetDialogOpen(false);
-    setDrawCooldown(0); // Reset cooldown on quick reset
+    onQuickReset();
+    setDrawCooldown(0);
   };
 
-  const isDrawDisabled = !canDraw || autoDrawEnabled || drawCooldown > 0;
+  const handleQuickResetCancel = () => {
+    setQuickResetDialogOpen(false);
+  };
+
+  const isDrawDisabled = !canDraw || drawCooldown > 0 || isComplete;
 
   return (
     <>
@@ -102,8 +110,24 @@ export function GameControls({
             </Button>
           </div>
 
-          {/* Auto-draw controls */}
+          {/* Voice Announcements and Auto-draw controls */}
           <div className="space-y-4 pt-4 border-t">
+            {/* Voice Announcements toggle */}
+            <div className="flex items-center justify-between">
+              <Label htmlFor="voice-enabled" className="text-base font-semibold">
+                Voice Announcements
+              </Label>
+              <div className="flex items-center gap-2">
+                <Volume2 className="h-4 w-4 text-muted-foreground" />
+                <Switch
+                  id="voice-enabled"
+                  checked={voiceEnabled}
+                  onCheckedChange={onVoiceToggle}
+                />
+              </div>
+            </div>
+
+            {/* Auto Draw toggle */}
             <div className="flex items-center justify-between">
               <Label htmlFor="auto-draw" className="text-base font-semibold">
                 Auto Draw
@@ -123,6 +147,7 @@ export function GameControls({
               </div>
             </div>
 
+            {/* Interval slider */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="interval" className="text-sm text-muted-foreground">
@@ -155,7 +180,7 @@ export function GameControls({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>No</AlertDialogCancel>
+            <AlertDialogCancel onClick={handleQuickResetCancel}>No</AlertDialogCancel>
             <AlertDialogAction onClick={handleQuickResetConfirm}>Yes</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

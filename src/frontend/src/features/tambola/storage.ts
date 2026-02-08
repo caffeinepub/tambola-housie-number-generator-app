@@ -18,8 +18,9 @@ export function createInitialGameState(): TambolaGameState {
 
 export function createInitialAutoDrawSettings(): AutoDrawSettings {
   return {
-    enabled: false,
-    intervalSeconds: 4, // Changed from 5 to 4
+    enabled: false, // Changed to false - Auto Draw defaults to OFF
+    intervalSeconds: 4,
+    paused: false,
   };
 }
 
@@ -50,6 +51,14 @@ export function loadPersistedState(): PersistedState | null {
     // Ensure interval is at least 4 seconds
     if (parsed.autoDrawSettings && parsed.autoDrawSettings.intervalSeconds < 4) {
       parsed.autoDrawSettings.intervalSeconds = 4;
+    }
+
+    // Preserve the persisted enabled state (don't force it)
+    if (parsed.autoDrawSettings) {
+      // Normalize paused state to false if missing or invalid
+      if (typeof parsed.autoDrawSettings.paused !== 'boolean') {
+        parsed.autoDrawSettings.paused = false;
+      }
     }
 
     return parsed;

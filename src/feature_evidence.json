@@ -2,10 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-remove-only-the-footer-text-that-displays-draft-34-the-live-version-label-while-keeping-the-rest-of-the-footer-content-and-layout-unchanged",
-      "featureTitle": "Remove only the footer text that displays “Draft 34” (the live version label) while keeping the rest of the footer content and layout unchanged.",
+      "featureId": "feature-ensure-host-recorded-audio-clips-are-only-used-for-the-exact-selected-drawn-number-1-90-and-never-unintentionally-triggered-for-other-numbers-e-g-clip-for-1-must-not-play-when-announcing-12-13-41-etc",
+      "featureTitle": "Ensure host-recorded audio clips are only used for the exact selected/drawn number (1–90) and never unintentionally triggered for other numbers (e.g., clip for 1 must not play when announcing 12, 13, 41, etc.).",
       "files": [
-        "frontend/src/App.tsx"
+        "frontend/src/features/tambola/voice/types.ts",
+        "frontend/src/features/tambola/voice/useVoiceAnnouncements.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -16,6 +17,25 @@
       ],
       "testIds": [
         "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-voice-announcement-playback-sequencing-so-that-in-digits-then-number-reading-mode-digit-steps-always-use-tts-never-host-recordings-while-the-final-full-number-step-may-use-host-recordings-according-to-the-selected-voice-source-priority",
+      "featureTitle": "Update the voice announcement playback sequencing so that in “digits-then-number” reading mode, digit steps always use TTS (never host recordings), while the final full-number step may use host recordings according to the selected voice source priority.",
+      "files": [
+        "frontend/src/features/tambola/voice/useVoiceAnnouncements.ts",
+        "frontend/src/features/tambola/voice/voiceClipsStore.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
       ],
       "confidence": "high"
     }
